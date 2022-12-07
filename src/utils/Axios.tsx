@@ -1,5 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { addData } from "../slices/dataSlice";
+import { loading, errorState } from "../slices/loadErrorSlice";
+import { globalStateType } from "../types";
 
 const APICall = (
   url: string,
@@ -11,15 +15,17 @@ const APICall = (
     `url: ${url}, payload: ${payload}, method: ${method}, param: ${param}`
   );
 
+  const dispatch = useAppDispatch();
+
   // move these states up to the global state
-  const [data, setData] = useState<object>({}); //what data type will ne returned here?
-  const [error, setError] = useState<any>(null);
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const data: any = useAppSelector((state: globalStateType) => state.data);
+  const error: boolean = useAppSelector((state: globalStateType) => state.loadError.error);
+  const load: boolean = useAppSelector((state: globalStateType) => state.loadError.loading);
 
   const instance = axios.create({
     baseURL: process.env.REACT_APP_API_GENERAL_URI,
     timeout: 1000,
-    headers: { Authorization: `Bearer ` },
+    headers: { Authorization: `Bearer `},
     method: method,
     params: {
       param,
@@ -30,24 +36,28 @@ const APICall = (
   useEffect(() => {
     const loadData = async () => {
       try {
+        dispatch(loading(true))
         const response = await instance.request({
           data: payload,
           url: url,
         });
         console.log(response);
+        dispatch(loading(false))
+        dispatch(errorState(false))
+        dispatch(addData(response))
 
-        setData(response);
+        // add notification
 
-        setLoaded(true);
       } catch (error: any) {
-        setError(error);
         console.log(error);
+        dispatch(errorState(true))
+
+        // add notification
       }
     };
 
     loadData();
-  }, [url]);
-  return { data, error, loaded };
+  }, []);
 };
 
 export default APICall;

@@ -2,6 +2,18 @@ import React from "react";
 import { Card, RouteInfo } from "./components";
 
 function App() {
+  const user = {
+    email: {
+      address: "",
+    },
+    password: "",
+    passwordConfirmation: "",
+    username: "",
+    profile: {
+      firstName: "",
+      lastName: "",
+    },
+  };
   return (
     <>
       <main className="flex justify-center w-full p-10 xl:mt-10 items-center constrain">
@@ -69,13 +81,16 @@ function App() {
           <RouteInfo
             routeType="User"
             routeEndpoint={process.env.REACT_APP_API_USERS_ENDPOINT!}
-            routeExplaination='These routes handle everything user related. However, some of the routes
+            routeExplaination="These routes handle everything user related. However, some of the routes
             are restricted to admin users only, and all routes need a user to be
             signed in before then can be used. You can start by creating a user,
             then heading to the sessions route and logging the user in before
-            continuing with the rest of the app.'
+            continuing with the rest of the app."
           />
-          <Card method="Post" />
+          <Card
+            method="post"
+            payloadSchema={"user"}
+          />
         </div>
       </main>
       <footer className="flex justify-center items-center">

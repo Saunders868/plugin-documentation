@@ -1,28 +1,26 @@
-import { AnyAction } from "redux";
-
 // REDUX TYPES
 export interface sessionType {
   accessToken: string;
   refreshToken: string;
 }
 
-// ACTION TYPES
-export interface actionType extends AnyAction {
-  type: string;
+export interface loadErrorType {
+  loading: boolean;
+  error: boolean;
 }
-
-export type payloadType = {
-  data: object;
-};
 
 export type dataType = {
   data: {};
 };
 
-// ACTION CREATOR TYPES
-export interface actionCreatorType {
-  type: string;
+// GLOBAL STATE TYPE
+export interface globalStateType {
+  user: any;
+  session: any;
+  data: any;
+  loadError: any;
 }
+
 
 // USER TYPES
 type profileType = {
@@ -41,3 +39,31 @@ export type userType = {
   username: string;
   profile?: profileType;
 };
+
+// SESSION TYPES
+export type sessionSchema = {
+  email: string;
+  password: string;
+}
+
+// PROUCT TYPES
+export type productSchema = {
+  title: string;
+  desc: string; 
+  price: number;
+}
+
+// CART TYPES
+export type cartSchema = {
+  products: [
+    {
+      product_id: string;
+      quantity: number;
+    }
+  ]
+}
+
+// ORDER TYPES
+export type orderSchema = { 
+  isCompleted: boolean;
+}

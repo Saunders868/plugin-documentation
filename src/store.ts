@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dataSlice, sessionSlice, userSlice } from "./slices";
+import { dataSlice, loadErrorSlice, sessionSlice, userSlice } from "./slices";
 
 
 export type RootState = ReturnType<typeof store.getState>;
@@ -9,6 +9,7 @@ export const store = configureStore({
   reducer: {
     user: userSlice,
     session: sessionSlice,
-    data: dataSlice
+    data: dataSlice,
+    loadError: loadErrorSlice
   },
 });
