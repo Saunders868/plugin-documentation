@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { userType } from "../types";
 
-type CardProps = {
+type componentProps = {
   required: boolean;
   label: string;
   placeholder: string;
@@ -11,14 +11,14 @@ type CardProps = {
   type: string;
 };
 
-const Card = ({
+const Card:FC<componentProps> = ({
   required,
   label,
   placeholder,
   id,
   setFormData,
   formData,
-}: CardProps) => {
+}: componentProps) => {
   const stateID = id;
 
   const onChangeHandler = (e: any) => {
@@ -30,15 +30,15 @@ const Card = ({
     <div>
       <label
         htmlFor={id}
-        className="block mb-2 text-sm font-sans font-medium text-gray-900 dark:text-gray-300 text-transform: capitalize"
+        className="block mb-2 text-sm font-sans font-medium text-gray-900 capitalize"
       >
-        {required ? `${label}` : `${label} (optional)`}
+        {required ? `${label}*` : `${label} (optional)`}
       </label>
       {required ? (
         <input
           type="text"
           id={id}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
           placeholder={placeholder}
           onChange={onChangeHandler}
           required
@@ -47,7 +47,7 @@ const Card = ({
         <input
           type="text"
           id={id}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
           placeholder={placeholder}
           onChange={onChangeHandler}
         />

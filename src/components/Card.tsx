@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { loggedIn } from "../slices/userSlice";
 import { userType } from "../types";
@@ -6,11 +7,11 @@ import { userType } from "../types";
 // import APICall from "../utils/Axios";
 import Input from "./Input";
 
-type CardProps = {
+type componentProps = {
   method: string;
 };
 
-const Card = ({ method }: CardProps) => {
+const Card:FC<componentProps> = ({ method }: componentProps) => {
   const dispatch = useAppDispatch();
 
   const data: userType = useAppSelector((state) => state.user);
@@ -68,12 +69,15 @@ const Card = ({ method }: CardProps) => {
     );
   }, [formData, dispatch]);
   return (
-    <div className="h-auto w-full max-w-7xl m-4 mb-10 py-5 rounded-lg border-gray-50 bg-yellow-500">
-      <h2 className="font-serif text-4xl m-8 md:text-7xl text-transform: capitalize;">
+    <div className="h-auto w-full constrain mb-10 p-6 md:p-10 rounded-lg border border-gray-200 shadow-md bg-white">
+      <h2 className="primary-text font-semibold uppercase mb-2">
         {method}
       </h2>
-
-      <form className="grid gap-6 mb-6 m-8 lg:grid-cols-2 overflow-y-scroll h-64">
+      <h3 className="secondary-text mb-4">
+        <span className="font-semibold capitalize">create user</span> <br /> Create a user by sending a post request to
+        the endpoint - {process.env.REACT_APP_API_USERS_ENDPOINT}
+      </h3>
+      <form className="grid gap-6 mb-6 lg:grid-cols-2 ">
         <Input
           setFormData={setFormData}
           formData={formData}
@@ -128,38 +132,13 @@ const Card = ({ method }: CardProps) => {
           label="Last Name"
           id="lastName"
         />
-
-        <button type="submit" onClick={() => handleSubmit}>
-          submit
-        </button>
+        <div>
+          <button className="btn" type="submit" onClick={() => handleSubmit}>
+            submit
+          </button>
+        </div>
       </form>
-
-      <div>
-        <p>
-          Email:
-          <span>{data.email.address}</span>
-        </p>
-        <p>
-          Username:
-          <span>{data.username}</span>
-        </p>
-        <p>
-          Password:
-          <span>{data.password}</span>
-        </p>
-        <p>
-          Password Confirmation:
-          <span>{data.passwordConfirmation}</span>
-        </p>
-        <p>
-          First Name:
-          <span>{data.profile?.firstName}</span>
-        </p>
-        <p>
-          Last Name:
-          <span>{data.profile?.lastName}</span>
-        </p>
-      </div>
+      
     </div>
   );
 };
