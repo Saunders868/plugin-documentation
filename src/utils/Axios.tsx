@@ -1,22 +1,30 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-const APICall = (url: string, payload: object | null, method:string, param: string | null) => {
-  console.log(`url: ${url}, payload: ${payload}, method: ${method}, param: ${param}`);
-  
+const APICall = (
+  url: string,
+  payload: object | null,
+  method: string,
+  param: string | null
+) => {
+  console.log(
+    `url: ${url}, payload: ${payload}, method: ${method}, param: ${param}`
+  );
+
+  // move these states up to the global state
   const [data, setData] = useState<object>({}); //what data type will ne returned here?
-  const [error, setError] = useState<any>("");
+  const [error, setError] = useState<any>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
 
   const instance = axios.create({
     baseURL: process.env.REACT_APP_API_GENERAL_URI,
     timeout: 1000,
-    headers: {'Authorization': `Bearer `},
+    headers: { Authorization: `Bearer ` },
     method: method,
     params: {
-      param
+      param,
     },
-    url: url
+    url: url,
   });
 
   useEffect(() => {
@@ -24,23 +32,22 @@ const APICall = (url: string, payload: object | null, method:string, param: stri
       try {
         const response = await instance.request({
           data: payload,
-          url: url
-        })
+          url: url,
+        });
         console.log(response);
 
-        setData(response)
+        setData(response);
 
-        setLoaded(true)
-      } catch (error:any) {
+        setLoaded(true);
+      } catch (error: any) {
         setError(error);
         console.log(error);
       }
-
-    }
+    };
 
     loadData();
-  }, [url])
+  }, [url]);
   return { data, error, loaded };
-}
+};
 
-export default APICall
+export default APICall;

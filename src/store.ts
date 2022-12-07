@@ -1,40 +1,14 @@
-// import { createSlice, configureStore } from '@reduxjs/toolkit'
+import { configureStore } from "@reduxjs/toolkit";
+import { dataSlice, sessionSlice, userSlice } from "./slices";
 
-// const userSlice = createSlice({
-//   name: 'user',
-//   initialState: {
-//     email: "",
-//     password: "",
-//     passwordConfirm: "",
-//     username: "",
-//     firstName: "",
-//     lastName: "",
-//     accessToken: "",
-//     refreshToken: "",
-//   },
-//   reducers: {
-//     email: state => {
-//       state.email = 
-//     },
-//     decremented: state => {
-//       state.value -= 1
-//     }
-//   }
-// })
 
-// export const { incremented, decremented } = counterSlice.actions
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-// const store = configureStore({
-//   reducer: counterSlice.reducer
-// })
-
-// // Can still subscribe to the store
-// store.subscribe(() => console.log(store.getState()))
-
-// // Still pass action objects to `dispatch`, but they're created for us
-// store.dispatch(incremented())
-// // {value: 1}
-// store.dispatch(incremented())
-// // {value: 2}
-// store.dispatch(decremented())
-// // {value: 1}
+export const store = configureStore({
+  reducer: {
+    user: userSlice,
+    session: sessionSlice,
+    data: dataSlice
+  },
+});

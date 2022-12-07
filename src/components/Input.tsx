@@ -1,21 +1,14 @@
 import React, { Dispatch, SetStateAction } from "react";
-
-type formDataType = {
-  email: string;
-  password: string;
-  passwordConfirm: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-};
+import { userType } from "../types";
 
 type CardProps = {
   required: boolean;
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<formDataType>>;
-  formData: formDataType;
+  setFormData: Dispatch<SetStateAction<userType>>;
+  formData: userType;
+  type: string;
 };
 
 const Card = ({
@@ -28,9 +21,11 @@ const Card = ({
 }: CardProps) => {
   const stateID = id;
 
-  const onChangeHandler = (e) => {
+  const onChangeHandler = (e: any) => {
     setFormData({ ...formData, [stateID]: e.target.value });
   };
+  
+  
   return (
     <div>
       <label
