@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { addData } from "../slices/dataSlice";
-import { dataType, globalStateType, userType } from "../types";
+import { useAppDispatch } from "../hooks";
+import { makeRequest } from "../slices/loadErrorSlice";
+// import { useAppDispatch, useAppSelector } from "../hooks";
+// import { addData } from "../slices/dataSlice";
+import { formType } from "../types";
 
-import APICall from "../utils/Axios";
+import useAxios from "../utils/Axios";
 import Input from "./Input";
 
 // try defining the form types in types file first, then passig the type down as props, then rendering different inputs based on the types and getting back different data based on each as well
@@ -23,55 +25,50 @@ const Card: FC<componentProps> = ({
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
-  const responseData: dataType = useAppSelector(
-    (state: globalStateType) => state.data
-  );
-  const dataToDisplay = JSON.stringify(responseData);
-  const [formData, setFormData] = useState<userType>({
-    email: {
-      address: "",
-    },
+  const [formData, setFormData] = useState<formType>({
+    email: "",
     password: "",
     passwordConfirmation: "",
     username: "",
-    profile: {
-      firstName: "",
-      lastName: "",
-    },
+    firstName: "",
+    lastName: "",
   });
+
+  // use load state to render a spinner instead of the card | Dont need error state
+  const { data, error, load } = useAxios(
+    process.env.REACT_APP_API_USERS_ENDPOINT!,
+    // this needs to be passed in through component or globel state
+    {
+      email: {
+        address: formData.email,
+      },
+      password: formData.password,
+      passwordConfirmation: formData.passwordConfirmation,
+      username: formData.username,
+      profile: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      },
+    },
+    "post",
+    null
+  );
+
+  const dataToDisplay = JSON.stringify(data);
 
   console.log(formData);
 
-  const handleSubmit = (e: Event) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    APICall(
-      process.env.REACT_APP_API_USERS_ENDPOINT!,
-      // this needs to be passed in through component or globel state
-      {
-        email: {
-          address: formData.email.address,
-        },
-        password: formData.password,
-        passwordConfirmation: formData.passwordConfirmation,
-        username: formData.username,
-        profile: {
-          firstName: formData.profile?.firstName,
-          lastName: formData.profile?.lastName,
-        },
-      },
-      "post",
-      null
-    );
+    dispatch(makeRequest(true))
+
+    setTimeout(() => {
+      dispatch(makeRequest(false))
+    }, 1000)
   };
 
-  useEffect(() => {
-    dispatch(
-      addData({
-        formData,
-      })
-    );
-  }, [formData, dispatch]);
+  useEffect(() => {}, []);
   return (
     <div className="h-auto w-full constrain mb-10 p-6 md:p-10 rounded-lg border border-gray-200 shadow-md bg-white">
       <h2 className="primary-text font-semibold uppercase mb-2">{method}</h2>
@@ -80,7 +77,10 @@ const Card: FC<componentProps> = ({
         Create a user by sending a post request to the endpoint -{" "}
         {process.env.REACT_APP_API_USERS_ENDPOINT}
       </h3>
-      <form className="grid gap-6 mb-6 lg:grid-cols-2 ">
+      <form
+        className="grid gap-6 mb-6 lg:grid-cols-2 "
+        onSubmit={(e) => handleSubmit(e)}
+      >
         {/* every input will need to change depending on the request. the number of inputs will also need to change */}
         <Input
           setFormData={setFormData}
@@ -137,13 +137,13 @@ const Card: FC<componentProps> = ({
           id="lastName"
         />
         <div>
-          <button className="btn" type="submit" onClick={() => handleSubmit}>
+          <button className="btn" type="submit">
             submit
           </button>
         </div>
       </form>
 
-      {responseData ? <div>{dataToDisplay}</div> : null}
+      {data ? <div className="w-full bg-slate-800 text-white rounded-lg p-5 overflow-x-scroll">{dataToDisplay}</div> : null}
     </div>
   );
 };

@@ -7,10 +7,11 @@ export interface sessionType {
 export interface loadErrorType {
   loading: boolean;
   error: boolean;
+  makeRequest: boolean;
 }
 
 export type dataType = {
-  data: {};
+  data: object;
 };
 
 // GLOBAL STATE TYPE
@@ -21,6 +22,15 @@ export interface globalStateType {
   loadError: any;
 }
 
+// FORM TYPE
+export type formType = {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+};
 
 // USER TYPES
 type profileType = {
@@ -44,14 +54,14 @@ export type userType = {
 export type sessionSchema = {
   email: string;
   password: string;
-}
+};
 
-// PROUCT TYPES
+// PRODUCT TYPES
 export type productSchema = {
   title: string;
-  desc: string; 
+  desc: string;
   price: number;
-}
+};
 
 // CART TYPES
 export type cartSchema = {
@@ -60,10 +70,10 @@ export type cartSchema = {
       product_id: string;
       quantity: number;
     }
-  ]
-}
+  ];
+};
 
 // ORDER TYPES
-export type orderSchema = { 
+export type orderSchema = {
   isCompleted: boolean;
-}
+};
