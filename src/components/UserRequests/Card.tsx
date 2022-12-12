@@ -4,21 +4,19 @@ import { useAppDispatch } from "../../hooks";
 import { makeRequest } from "../../slices/loadErrorSlice";
 // import { useAppDispatch, useAppSelector } from "../hooks";
 // import { addData } from "../slices/dataSlice";
-import { formType } from "../../types";
+import { formType, InputInterface } from "../../types";
 
 import useAxios from "../../utils/Axios";
-import Input from "../Input";
+import CreateUserInput from "./CreateUserInput";
+import Spinner from "../Spinner";
 
 // try defining the form types in types file first, then passig the type down as props, then rendering different inputs based on the types and getting back different data based on each as well
 
 type componentProps = {
   method: string;
-  // payload: userType | sessionSchema | cartSchema | orderSchema | productSchema;
-  payloadSchema: string;
 };
 
-// post will need to be different for create user
-const tryState = {
+const initialState: formType = {
   email: "",
   password: "",
   passwordConfirmation: "",
@@ -27,26 +25,73 @@ const tryState = {
   lastName: "",
 };
 
-// payload in formData gotten from input are not of correct type
+const userInputArray: InputInterface[]  = [
+  {
+    type: "text",
+    placeholder: "john@email.com",
+    label: "email",
+    id: "email",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_1",
+  },
+  {
+    type: "password",
+    placeholder: "password",
+    label: "Password",
+    id: "password",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_2",
+  },
+  {
+    type: "password",
+    placeholder: "confirm password",
+    label: "Password confirm",
+    id: "passwordConfirmation",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_3",
+  },
+  {
+    type: "text",
+    placeholder: "john868",
+    label: "username",
+    id: "username",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_4",
+  },
+  {
+    type: "text",
+    placeholder: "John",
+    label: "First Name",
+    id: "firstName",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_5",
+  },
+  {
+    type: "text",
+    placeholder: "Doe",
+    label: "Last Name",
+    id: "lirstName",
+    required: true,
+    // use uuidv4 to create id
+    key: "user_6",
+  },
+];
 
 const Card: FC<componentProps> = ({
   method,
-  payloadSchema,
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
-  const [formData, setFormData] = useState<formType>({
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-    username: "",
-    firstName: "",
-    lastName: "",
-  });
+  const [formData, setFormData] = useState<formType>(initialState);
 
-  // use load state to render a spinner instead of the card | Dont need error state
-  // get load state from store
-  const { data, error, load } = useAxios(
+  // need to make seperate input component for this post request card
+
+  const { data, load } = useAxios(
     process.env.REACT_APP_API_USERS_ENDPOINT!,
     // this needs to be passed in through component or globel state
     {
@@ -67,8 +112,6 @@ const Card: FC<componentProps> = ({
 
   const dataToDisplay = JSON.stringify(data);
 
-  // console.log(formData);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
@@ -80,6 +123,10 @@ const Card: FC<componentProps> = ({
   };
 
   useEffect(() => {}, []);
+  // use load state to render a spinner instead of the card | Dont need error state
+  if (load) {
+    return <Spinner />
+  };
   return (
     <div className="card">
       <h2 className="card-heading">{method}</h2>
@@ -89,8 +136,20 @@ const Card: FC<componentProps> = ({
         {process.env.REACT_APP_API_USERS_ENDPOINT}
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
-        {/* every input will need to change depending on the request. the number of inputs will also need to change */}
-        <Input
+        {/* create input array */}
+        {userInputArray.map((input) => (
+          <CreateUserInput
+          key={input.key}
+          setFormData={setFormData}
+          formData={formData}
+          required={input.required}
+          type={input.type}
+          placeholder={input.placeholder}
+          label={input.label}
+          id={input.id}
+        />
+        ))}
+        {/* <CreateUserInput
           setFormData={setFormData}
           formData={formData}
           required
@@ -99,7 +158,7 @@ const Card: FC<componentProps> = ({
           label="email"
           id="email"
         />
-        <Input
+        <CreateUserInput
           setFormData={setFormData}
           formData={formData}
           required
@@ -108,7 +167,7 @@ const Card: FC<componentProps> = ({
           label="password"
           id="password"
         />
-        <Input
+        <CreateUserInput
           setFormData={setFormData}
           formData={formData}
           required
@@ -117,7 +176,7 @@ const Card: FC<componentProps> = ({
           label="password Confirm"
           id="passwordConfirmation"
         />
-        <Input
+        <CreateUserInput
           setFormData={setFormData}
           formData={formData}
           required
@@ -126,7 +185,7 @@ const Card: FC<componentProps> = ({
           label="username"
           id="username"
         />
-        <Input
+        <CreateUserInput
           required={false}
           setFormData={setFormData}
           formData={formData}
@@ -135,7 +194,7 @@ const Card: FC<componentProps> = ({
           label="First Name"
           id="firstName"
         />
-        <Input
+        <CreateUserInput
           required={false}
           setFormData={setFormData}
           formData={formData}
@@ -143,7 +202,7 @@ const Card: FC<componentProps> = ({
           type="text"
           label="Last Name"
           id="lastName"
-        />
+        /> */}
         <div>
           <button className="btn" type="submit">
             submit

@@ -1,19 +1,41 @@
 import React from "react";
-import { APIdescription, Card, GetAllUsersRequestCard, RouteInfo } from "./components";
+import {
+  APIdescription,
+  Card,
+  GetAllUsersRequestCard,
+  PostRequests,
+  RouteInfo,
+} from "./components";
+import { InputInterface, sessionSchema } from "./types";
 
 function App() {
-  const user = {
-    email: {
-      address: "",
-    },
+
+  // put these into an external file
+  const sessionInitialState: sessionSchema = {
+    email: "",
     password: "",
-    passwordConfirmation: "",
-    username: "",
-    profile: {
-      firstName: "",
-      lastName: "",
-    },
   };
+
+  const sessionInputArray: InputInterface[]  = [
+    {
+      type: "text",
+      placeholder: "email",
+      label: "Email",
+      id: "email",
+      required: true,
+      // use uuidv4 to create id
+      key: "1",
+    },
+    {
+      type: "password",
+      placeholder: "password",
+      label: "Password",
+      id: "password",
+      required: true,
+      // use uuidv4 to create id
+      key: "2",
+    },
+  ];
   return (
     <>
       <main className="flex justify-center w-full p-10 xl:mt-10 items-center constrain">
@@ -28,11 +50,24 @@ function App() {
             then heading to the sessions route and logging the user in before
             continuing with the rest of the app."
           />
-          <Card
-            method="post"
-            payloadSchema={"user"}
-          />
+          <Card method="post" />
           <GetAllUsersRequestCard />
+          <RouteInfo
+            routeType="Session"
+            routeEndpoint={process.env.REACT_APP_API_SESSIONS_ENDPOINT!}
+            routeExplaination="These routes handle the logging in and loggin out of users. The username and password is checked to ensure it matches what is present in the database, then an access token and refresh token is returned to the browser allowing the user to access restricted routes in the application."
+          />
+          <PostRequests
+            endpoint={process.env.REACT_APP_API_SESSIONS_ENDPOINT!}
+            method="post"
+            initialState={sessionInitialState}
+            inputArray={sessionInputArray}
+            title={"Login user"}
+            subtitle={
+              "Login a user by sending a post request to the user endpoint"
+            }
+            // payloadSchema=
+          />
         </div>
       </main>
       <footer className="flex justify-center items-center">

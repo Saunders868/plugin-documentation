@@ -77,3 +77,14 @@ export type cartSchema = {
 export type orderSchema = {
   isCompleted: boolean;
 };
+
+
+// POST CARD TYPES
+export interface InputInterface {
+  type: string;
+  placeholder: string;
+  label: string;
+  id: string;
+  required: boolean;
+  key: string;
+}

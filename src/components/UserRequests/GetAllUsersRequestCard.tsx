@@ -1,28 +1,25 @@
 import React, { FC } from "react";
 import { useAppDispatch } from "../../hooks";
 import { makeRequest } from "../../slices/loadErrorSlice";
+import { InputInterface } from "../../types";
 import useAxios from "../../utils/Axios";
 // import Input from "./Input";
 
-// interface componentProps {
-//   route: string;
-//   model: string;
-//   params: string;
-// }
+interface componentProps {
+  endpoint?: string;
+  model?: string;
+  params?: string;
+  inputArray?: InputInterface[];
+}
 
 // need the params, url, method[will be get of the bat], inputs based on what?, route
 
-const GetRequestCard: FC = () => {
+const GetRequestCard: FC<componentProps> = ({
+  endpoint,
+  model,
+  params
+}) => {
   const dispatch = useAppDispatch();
-
-  // const [formData, setFormData] = useState({
-  //   email: "",
-  //   password: "",
-  //   passwordConfirmation: "",
-  //   username: "",
-  //   firstName: "",
-  //   lastName: "",
-  // });
 
   const { data } = useAxios(
     process.env.REACT_APP_API_USERS_ENDPOINT!,

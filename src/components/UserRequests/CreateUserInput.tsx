@@ -1,13 +1,13 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { cartSchema, formType, orderSchema, productSchema, sessionSchema } from "../types";
+import { formType } from "../../types";
 
 type componentProps = {
   required: boolean;
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<formType | sessionSchema | productSchema | cartSchema | orderSchema>>;
-  formData: formType | sessionSchema | productSchema | cartSchema | orderSchema;
+  setFormData: Dispatch<SetStateAction<formType>>;
+  formData: formType;
   type: string;
 };
 

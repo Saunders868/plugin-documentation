@@ -4,56 +4,44 @@ import { useAppDispatch } from "../hooks";
 import { makeRequest } from "../slices/loadErrorSlice";
 // import { useAppDispatch, useAppSelector } from "../hooks";
 // import { addData } from "../slices/dataSlice";
-import { formType } from "../types";
+import { cartSchema, InputInterface, orderSchema, productSchema, sessionSchema } from "../types";
 
 import useAxios from "../utils/Axios";
 import Input from "./Input";
+import Spinner from "./Spinner";
 
 // try defining the form types in types file first, then passig the type down as props, then rendering different inputs based on the types and getting back different data based on each as well
-
-interface InputInterface {
-  type: string;
-  placeholder: string;
-  label: string;
-  id: string;
-  required: boolean;
-  key: string;
-}
 
 type componentProps = {
   method: string;
   // payload: userType | sessionSchema | cartSchema | orderSchema | productSchema;
-  payloadSchema: string;
+  // payloadSchema: string;
   initialState: any;
-  inputArray: [InputInterface];
-};
-
-// post will need to be different for create user
-const tryState = {
-  email: "",
-  password: "",
-  passwordConfirmation: "",
-  username: "",
-  firstName: "",
-  lastName: "",
+  inputArray: InputInterface[];
+  title: string;
+  subtitle: string;
+  endpoint: string;
 };
 
 // payload in formData gotten from input are not of correct type
 
 const Card: FC<componentProps> = ({
   method,
-  payloadSchema,
+  // payloadSchema,
   initialState,
   inputArray,
+  title,
+  subtitle, 
+  endpoint
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
   // could pass type through or make open to all possible types
-  const [formData, setFormData] = useState<formType>(initialState);
+  const [formData, setFormData] = useState<sessionSchema | productSchema | cartSchema | orderSchema>(initialState);
 
-  // use load state to render a spinner instead of the card | Dont need error state
+  
   // get load state from store
-  const { data, error, load } = useAxios(
+  const { data, load } = useAxios(
     process.env.REACT_APP_API_USERS_ENDPOINT!,
     // this needs to be passed in through component or globel state
     formData,
@@ -76,13 +64,18 @@ const Card: FC<componentProps> = ({
   };
 
   useEffect(() => {}, []);
+
+  // use load state to render a spinner instead of the card | Dont need error state
+  if (load) {
+    return <Spinner />
+  };
+
   return (
     <div className="card">
       <h2 className="card-heading">{method}</h2>
       <h3 className="card-subheading">
-        <span className="card-desc">create user</span> <br /> Create a user by
-        sending a post request to the endpoint -{" "}
-        {process.env.REACT_APP_API_USERS_ENDPOINT}
+        <span className="card-desc">{title}</span> <br />{subtitle}-{" "}
+        {endpoint}
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
         {/* every input will need to change depending on the request. the number of inputs will also need to change */}
