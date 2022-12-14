@@ -2,11 +2,12 @@ import React from "react";
 import {
   APIdescription,
   Card,
-  GetAllUsersRequestCard,
+  GetRequestCard,
   PostRequests,
   RouteInfo,
 } from "./components";
 import { InputInterface, sessionSchema } from "./types";
+import uuid  from 'react-uuid';
 
 function App() {
 
@@ -18,13 +19,12 @@ function App() {
 
   const sessionInputArray: InputInterface[]  = [
     {
-      type: "text",
+      type: "email",
       placeholder: "email",
       label: "Email",
       id: "email",
       required: true,
-      // use uuidv4 to create id
-      key: "1",
+      key: uuid(),
     },
     {
       type: "password",
@@ -32,10 +32,20 @@ function App() {
       label: "Password",
       id: "password",
       required: true,
-      // use uuidv4 to create id
-      key: "2",
+      key: uuid(),
     },
   ];
+
+  const getInputArray: InputInterface[] = [
+    {
+      type: "text",
+      placeholder: "param",
+      label: "Param",
+      id: "param",
+      required: true,
+      key: uuid(),
+    },
+  ]
   return (
     <>
       <main className="flex justify-center w-full p-10 xl:mt-10 items-center constrain">
@@ -51,7 +61,12 @@ function App() {
             continuing with the rest of the app."
           />
           <Card method="post" />
-          <GetAllUsersRequestCard />
+          <GetRequestCard
+            endpoint={process.env.REACT_APP_API_USERS_ENDPOINT!}
+            title="users"
+            subtitle="Get all users by sending a post request to the endpoint"
+            inputArray={getInputArray}
+          />
           <RouteInfo
             routeType="Session"
             routeEndpoint={process.env.REACT_APP_API_SESSIONS_ENDPOINT!}
@@ -66,7 +81,6 @@ function App() {
             subtitle={
               "Login a user by sending a post request to the user endpoint"
             }
-            // payloadSchema=
           />
         </div>
       </main>

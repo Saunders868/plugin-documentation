@@ -67,7 +67,7 @@ const userInputArray: InputInterface[]  = [
     placeholder: "John",
     label: "First Name",
     id: "firstName",
-    required: true,
+    required: false,
     // use uuidv4 to create id
     key: "user_5",
   },
@@ -76,7 +76,7 @@ const userInputArray: InputInterface[]  = [
     placeholder: "Doe",
     label: "Last Name",
     id: "lirstName",
-    required: true,
+    required: false,
     // use uuidv4 to create id
     key: "user_6",
   },
@@ -149,60 +149,7 @@ const Card: FC<componentProps> = ({
           id={input.id}
         />
         ))}
-        {/* <CreateUserInput
-          setFormData={setFormData}
-          formData={formData}
-          required
-          type="email"
-          placeholder="john@email.com"
-          label="email"
-          id="email"
-        />
-        <CreateUserInput
-          setFormData={setFormData}
-          formData={formData}
-          required
-          placeholder="password"
-          type="password"
-          label="password"
-          id="password"
-        />
-        <CreateUserInput
-          setFormData={setFormData}
-          formData={formData}
-          required
-          placeholder="confirm password"
-          type="password"
-          label="password Confirm"
-          id="passwordConfirmation"
-        />
-        <CreateUserInput
-          setFormData={setFormData}
-          formData={formData}
-          required
-          placeholder="john868"
-          type="text"
-          label="username"
-          id="username"
-        />
-        <CreateUserInput
-          required={false}
-          setFormData={setFormData}
-          formData={formData}
-          placeholder="John"
-          type="text"
-          label="First Name"
-          id="firstName"
-        />
-        <CreateUserInput
-          required={false}
-          setFormData={setFormData}
-          formData={formData}
-          placeholder="Doe"
-          type="text"
-          label="Last Name"
-          id="lastName"
-        /> */}
+        
         <div>
           <button className="btn" type="submit">
             submit

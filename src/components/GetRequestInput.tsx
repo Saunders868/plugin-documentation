@@ -1,29 +1,25 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { formType } from "../../types";
 
 type componentProps = {
   required: boolean;
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<formType>>;
-  formData: formType;
+  setFormData: Dispatch<SetStateAction<string>>;
   type: string;
 };
 
-const CreateUserInput: FC<componentProps> = ({
+const GetRequestInput: FC<componentProps> = ({
   required,
   label,
   placeholder,
   id,
   setFormData,
-  formData,
   type,
 }: componentProps) => {
-  const stateID = id;
 
   const onChangeHandler = (e: any) => {
-    setFormData({ ...formData, [stateID]: e.target.value });
+    setFormData(e.target.value);
   };
 
   return (
@@ -45,4 +41,4 @@ const CreateUserInput: FC<componentProps> = ({
   );
 };
 
-export default CreateUserInput;
+export default GetRequestInput;
