@@ -1,42 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { FC } from "react";
-import { useAppDispatch } from "../hooks";
-import { makeRequest } from "../slices/loadErrorSlice";
-import {
-  cartSchema,
-  InputInterface,
-  orderSchema,
-  productSchema,
-  sessionSchema,
-} from "../types";
+import { patchUserInputArray } from "../../data";
+import { useAppDispatch } from "../../hooks";
+import { makeRequest } from "../../slices/loadErrorSlice";
+import { formType } from "../../types";
 
-import useAxios from "../utils/Axios";
-import Input from "./Input";
-import Spinner from "./Spinner";
+import useAxios from "../../utils/Axios";
+import Spinner from "../Spinner";
+import CreateUserInput from "./CreateUserInput";
 
-type componentProps = {
-  method: string;
-  initialState: any;
-  inputArray: InputInterface[];
-  title: string;
-  subtitle: string;
-  endpoint: string;
+const initialState: formType = {
+  email: "",
+  password: "",
+  passwordConfirmation: "",
+  username: "",
+  firstName: "",
+  lastName: "",
+  param: ""
 };
 
-const Card: FC<componentProps> = ({
-  method,
-  initialState,
-  inputArray,
-  title,
-  subtitle,
-  endpoint,
-}: componentProps) => {
+const Card: FC = () => {
   const dispatch = useAppDispatch();
 
-  const [formData, setFormData] = useState<
-    sessionSchema | productSchema | cartSchema | orderSchema
-  >(initialState);
-
+  const [formData, setFormData] = useState<formType>(initialState);
+  
   // get load state from store
   const { data, load } = useAxios(
     process.env.REACT_APP_API_USERS_ENDPOINT!,
@@ -62,19 +49,19 @@ const Card: FC<componentProps> = ({
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
-    return <Spinner />;
-  }
+    return <Spinner />
+  };
 
   return (
     <div className="card">
-      <h2 className="card-heading">{method}</h2>
+      <h2 className="card-heading">Patch</h2>
       <h3 className="card-subheading">
-        <span className="card-desc">{title}</span> <br />
-        {subtitle} - {endpoint}
+        <span className="card-desc">Update User</span> <br />Update a user by sending a patch request and data to the endpoint -{" "}
+        {process.env.REACT_APP_API_USERS_ENDPOINT}/:id
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
-        {inputArray.map((input) => (
-          <Input
+        {patchUserInputArray.map((input) => (
+          <CreateUserInput
             key={input.key}
             setFormData={setFormData}
             formData={formData}
@@ -87,7 +74,7 @@ const Card: FC<componentProps> = ({
         ))}
         <div>
           <button className="btn" type="submit">
-            submit
+            update
           </button>
         </div>
       </form>

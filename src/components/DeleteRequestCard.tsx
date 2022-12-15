@@ -29,7 +29,7 @@ const GetRequestCard: FC<componentProps> = ({
   const { data } = useAxios(
     endpoint,
     {},
-    "get",
+    "delete",
     formData
   );
 
@@ -47,10 +47,10 @@ const GetRequestCard: FC<componentProps> = ({
 
   return (
     <div className="card">
-      <h2 className="card-heading">GET</h2>
+      <h2 className="card-heading">Delete</h2>
       <h3 className="card-subheading">
-        <span className="card-desc">Get {title}</span> <br /> {subtitle} -{" "}
-        {endpoint}{title === "user" ? '/:id' : ''}
+        <span className="card-desc">Delete {title}</span> <br /> {subtitle} -{" "}
+        {endpoint}/:id
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
         {/* every input will need to change depending on the request. the number of inputs will also need to change */}
@@ -70,7 +70,7 @@ const GetRequestCard: FC<componentProps> = ({
         ) : null}
         <div>
           <button className="btn" type="submit">
-            submit
+            delete
           </button>
         </div>
       </form>

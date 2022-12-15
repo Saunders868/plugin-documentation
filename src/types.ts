@@ -30,6 +30,7 @@ export type formType = {
   username: string;
   firstName: string;
   lastName: string;
+  param?: string;
 };
 
 // USER TYPES

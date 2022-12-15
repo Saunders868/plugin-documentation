@@ -2,19 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import { useAppDispatch } from "../../hooks";
 import { makeRequest } from "../../slices/loadErrorSlice";
-// import { useAppDispatch, useAppSelector } from "../hooks";
-// import { addData } from "../slices/dataSlice";
-import { formType, InputInterface } from "../../types";
+import { formType } from "../../types";
 
 import useAxios from "../../utils/Axios";
 import CreateUserInput from "./CreateUserInput";
 import Spinner from "../Spinner";
-
-// try defining the form types in types file first, then passig the type down as props, then rendering different inputs based on the types and getting back different data based on each as well
-
-type componentProps = {
-  method: string;
-};
+import { createUserInputArray } from "../../data";
 
 const initialState: formType = {
   email: "",
@@ -25,66 +18,7 @@ const initialState: formType = {
   lastName: "",
 };
 
-const userInputArray: InputInterface[]  = [
-  {
-    type: "text",
-    placeholder: "john@email.com",
-    label: "email",
-    id: "email",
-    required: true,
-    // use uuidv4 to create id
-    key: "user_1",
-  },
-  {
-    type: "password",
-    placeholder: "password",
-    label: "Password",
-    id: "password",
-    required: true,
-    // use uuidv4 to create id
-    key: "user_2",
-  },
-  {
-    type: "password",
-    placeholder: "confirm password",
-    label: "Password confirm",
-    id: "passwordConfirmation",
-    required: true,
-    // use uuidv4 to create id
-    key: "user_3",
-  },
-  {
-    type: "text",
-    placeholder: "john868",
-    label: "username",
-    id: "username",
-    required: true,
-    // use uuidv4 to create id
-    key: "user_4",
-  },
-  {
-    type: "text",
-    placeholder: "John",
-    label: "First Name",
-    id: "firstName",
-    required: false,
-    // use uuidv4 to create id
-    key: "user_5",
-  },
-  {
-    type: "text",
-    placeholder: "Doe",
-    label: "Last Name",
-    id: "lirstName",
-    required: false,
-    // use uuidv4 to create id
-    key: "user_6",
-  },
-];
-
-const Card: FC<componentProps> = ({
-  method,
-}: componentProps) => {
+const Card: FC = () => {
   const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState<formType>(initialState);
@@ -129,7 +63,7 @@ const Card: FC<componentProps> = ({
   };
   return (
     <div className="card">
-      <h2 className="card-heading">{method}</h2>
+      <h2 className="card-heading">POST</h2>
       <h3 className="card-subheading">
         <span className="card-desc">create user</span> <br /> Create a user by
         sending a post request to the endpoint -{" "}
@@ -137,7 +71,7 @@ const Card: FC<componentProps> = ({
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
         {/* create input array */}
-        {userInputArray.map((input) => (
+        {createUserInputArray.map((input) => (
           <CreateUserInput
           key={input.key}
           setFormData={setFormData}
