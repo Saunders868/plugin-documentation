@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FC } from "react";
 import { useAppDispatch } from "../hooks";
 import { makeRequest } from "../slices/loadErrorSlice";
+import { loggedIn } from "../slices/sessionSlice";
 import {
   cartSchema,
   InputInterface,
@@ -15,21 +16,21 @@ import Input from "./Input";
 import Spinner from "./Spinner";
 
 type componentProps = {
-  method: string;
   initialState: any;
   inputArray: InputInterface[];
   title: string;
   subtitle: string;
   endpoint: string;
+  login?: boolean;
 };
 
 const Card: FC<componentProps> = ({
-  method,
   initialState,
   inputArray,
   title,
   subtitle,
   endpoint,
+  login
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
@@ -53,6 +54,10 @@ const Card: FC<componentProps> = ({
 
     dispatch(makeRequest(true));
 
+    // if (login) {
+      // dispatch(loggedIn(token))
+    // }
+
     setTimeout(() => {
       dispatch(makeRequest(false));
     }, 1000);
@@ -67,7 +72,7 @@ const Card: FC<componentProps> = ({
 
   return (
     <div className="card">
-      <h2 className="card-heading">{method}</h2>
+      <h2 className="card-heading">post</h2>
       <h3 className="card-subheading">
         <span className="card-desc">{title}</span> <br />
         {subtitle} - {endpoint}

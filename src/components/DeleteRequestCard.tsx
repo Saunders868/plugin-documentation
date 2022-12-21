@@ -1,9 +1,11 @@
 import React, { FC, useState } from "react";
-import { useAppDispatch } from "../hooks";
-import { makeRequest } from "../slices/loadErrorSlice";
-import { InputInterface } from "../types";
-import useAxios from "../utils/Axios";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { addData } from "../slices/dataSlice";
+import { loading } from "../slices/loadErrorSlice";
+import { globalStateType, InputInterface } from "../types";
+import { axiosCall } from "../utils/Axios";
 import GetRequestInput from "./GetRequestInput";
+import Spinner from "./Spinner";
 
 interface componentProps {
   endpoint: string;
@@ -12,62 +14,76 @@ interface componentProps {
   inputArray?: InputInterface[];
 }
 
-
 const GetRequestCard: FC<componentProps> = ({
   endpoint,
   title,
   subtitle,
-  inputArray
+  inputArray,
 }) => {
   const dispatch = useAppDispatch();
 
-  // this state would control the params being passed in to the request
-  const [formData, setFormData] = useState<string>('');
-
-  // formdata param being passed as a query 
-  // need to solve this
-  const { data } = useAxios(
-    endpoint,
-    {},
-    "delete",
-    formData
+  const data: any = useAppSelector((state: globalStateType) => state.data);
+  const load: boolean = useAppSelector(
+    (state: globalStateType) => state.loadError.loading
   );
 
-  const dataToDisplay = JSON.stringify(data);
+  // this state would control the params being passed in to the request
+  const [formData, setFormData] = useState<object>({});
+
+  // formdata param being passed as a query
+  // need to solve this
+  // const { data } = useAxios(endpoint, {}, "delete", formData);
+
+
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    dispatch(makeRequest(true));
+    dispatch(loading(true));
 
-    setTimeout(() => {
-      dispatch(makeRequest(false));
-    }, 1000);
+    const dataAxios = axiosCall(
+      "delete",
+      "",
+      formData,
+      endpoint,
+      null
+    )
+
+    // put dataAxios into global state
+    dispatch(addData(dataAxios));
+
+    dispatch(loading(false));
   };
+
+  const dataToDisplay = JSON.stringify(data);
+
+  if (load) {
+    return <Spinner />
+  }
 
   return (
     <div className="card">
       <h2 className="card-heading">Delete</h2>
       <h3 className="card-subheading">
         <span className="card-desc">Delete {title}</span> <br /> {subtitle} -{" "}
-        {endpoint}/:id
+        {endpoint}
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
         {/* every input will need to change depending on the request. the number of inputs will also need to change */}
-        {inputArray ? (
-          inputArray.map((input) => (
-            // make custom get input components to accept string data type state
-            <GetRequestInput
-              key={input.key}
-              setFormData={setFormData}
-              required={input.required}
-              placeholder={input.placeholder}
-              type={input.type}
-              label={input.label}
-              id={input.id}
-            />
-          ))
-        ) : null}
+        {inputArray
+          ? inputArray.map((input) => (
+              // make custom get input components to accept string data type state
+              <GetRequestInput
+                key={input.key}
+                setFormData={setFormData}
+                required={input.required}
+                placeholder={input.placeholder}
+                type={input.type}
+                label={input.label}
+                id={input.id}
+              />
+            ))
+          : null}
         <div>
           <button className="btn" type="submit">
             delete

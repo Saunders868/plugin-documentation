@@ -9,7 +9,7 @@ export const dataSlice: Slice = createSlice({
   name: "data",
   initialState: initalState,
   reducers: {
-    addData: (state: dataType, { payload }: PayloadAction<object>) => {
+    addData: (state: dataType, { payload }: PayloadAction<dataType>) => {
       state.data = payload;
     },
   },

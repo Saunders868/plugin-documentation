@@ -33,7 +33,7 @@ const useAxios = (
   );
   const token: string = useAppSelector(
     (state: globalStateType) => state.session.accessToken
-  )
+  );
 
   // retuns string data type so the type is correct just to check if loggin works
   console.log(token);
@@ -59,7 +59,7 @@ const useAxios = (
             url: url,
           });
 
-          const serializedData = response.data
+          const serializedData = response.data;
           console.log(response);
           console.log(serializedData);
           dispatch(loading(false));
@@ -84,3 +84,39 @@ const useAxios = (
 };
 
 export default useAxios;
+
+const instance = axios.create({
+  baseURL: process.env.REACT_APP_API_GENERAL_URI!,
+  timeout: 1000,
+});
+
+export async function axiosCall(
+  method: string,
+  token: string,
+  params: {} | null,
+  url: string,
+  payload: object | null
+) {
+  try {
+    const response: AxiosResponse = await instance.request({
+      data: payload,
+      url: url,
+      headers: { Authorization: `Bearer ${token}` },
+      method: method,
+      params: params
+    });
+
+    const serializedData = await response.data;
+    console.log(response);
+    console.log(serializedData);
+
+    return serializedData;
+    // add notification
+  } catch (error: any) {
+    console.log(error);
+
+    // add notification
+  }
+
+  return;
+}

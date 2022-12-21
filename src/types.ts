@@ -11,7 +11,7 @@ export interface loadErrorType {
 }
 
 export type dataType = {
-  data: object;
+  data: {} | [];
 };
 
 // GLOBAL STATE TYPE
@@ -62,23 +62,21 @@ export type productSchema = {
   title: string;
   desc: string;
   price: number;
+  param?: string;
 };
 
 // CART TYPES
-export type cartSchema = {
-  products: [
-    {
-      product_id: string;
-      quantity: number;
-    }
-  ];
-};
+export type cartSchema = [
+  {
+    product_id: string;
+    quantity: number;
+  }
+];
 
 // ORDER TYPES
 export type orderSchema = {
   isCompleted: boolean;
 };
-
 
 // POST CARD TYPES
 export interface InputInterface {
