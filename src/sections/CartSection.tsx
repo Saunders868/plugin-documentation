@@ -6,7 +6,7 @@ import {
   PostRequests,
   RouteInfo,
 } from "../components";
-import { createCartInputArray, initialCartState, initialPatchCartState, paramInputArray, updateCartInputArray } from "../data";
+import { createCartInputArray, initialCartState, initialPatchCartState, paramInputArray, updateCartInputArray, updateCartParamsField } from "../data";
 
 const CART_ENDPOINT: string = process.env.REACT_APP_API_CARTS_ENDPOINT!;
 
@@ -48,7 +48,7 @@ const CartSection = () => {
         endpoint={`${CART_ENDPOINT}/:cartId`}
         initialState={initialPatchCartState}
         inputArray={updateCartInputArray}
-        paramObject={initialParamState}
+        paramField={updateCartParamsField}
       />
       <DeleteRequestCard
         endpoint={`${CART_ENDPOINT}/:id`}

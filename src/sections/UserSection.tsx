@@ -39,11 +39,10 @@ const UserSection = () => {
         subtitle="Get a user by sending a get request to the endpoint"
         inputArray={paramInputArray}
         initialState={initialStateUser}
-        user={true}
       />
       <UserPatchRequest />
       <DeleteRequestCard
-        endpoint={`${USER_ENDPOINT}/:id`}
+        endpoint={USER_ENDPOINT}
         title="user"
         subtitle="Delete a user by sending a delete request to the endpoint"
         inputArray={paramInputArray}

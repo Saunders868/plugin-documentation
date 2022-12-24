@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { patchUserInputArray } from "../../data";
-import { useAppDispatch } from "../../hooks";
-import { makeRequest } from "../../slices/loadErrorSlice";
-import { formType } from "../../types";
+import { patchUserInputArray, patchUserParamField } from "../../data";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { addData } from "../../slices/dataSlice";
+import { loading } from "../../slices/loadErrorSlice";
+import { formType, globalStateType } from "../../types";
 
-import useAxios from "../../utils/Axios";
+import { axiosCall } from "../../utils/Axios";
+import GetRequestInput from "../GetRequestInput";
 import Spinner from "../Spinner";
 import CreateUserInput from "./CreateUserInput";
 
@@ -16,50 +18,75 @@ const initialState: formType = {
   username: "",
   firstName: "",
   lastName: "",
-  param: ""
 };
 
 const Card: FC = () => {
   const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState<formType>(initialState);
-  
-  // get load state from store
-  const { data, load } = useAxios(
-    process.env.REACT_APP_API_USERS_ENDPOINT!,
-    // this needs to be passed in through component or globel state
-    formData,
-    "post",
-    null
+  const [param, setParam] = useState<string>("");
+
+  const dynamicEndpoint = `${process.env
+    .REACT_APP_API_USERS_ENDPOINT!}/${param}`;
+
+  const data: any = useAppSelector((state: globalStateType) => state.data);
+  const load: boolean = useAppSelector(
+    (state: globalStateType) => state.loadError.loading
   );
 
   const dataToDisplay = JSON.stringify(data);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
-    dispatch(makeRequest(true));
+    dispatch(loading(true));
+    const dataAxios: Promise<any> = await axiosCall(
+      "patch",
+      "",
+      dynamicEndpoint,
+      {
+        email: {
+          address: formData.email,
+        },
+        password: formData.password,
+        passwordConfirmation: formData.passwordConfirmation,
+        username: formData.username,
+        profile: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        },
+      }
+    );
 
-    setTimeout(() => {
-      dispatch(makeRequest(false));
-    }, 1000);
+    // put dataAxios into global state
+    console.log("AXIOS DATA", dataAxios);
+    dispatch(addData(dataAxios));
   };
-
-  useEffect(() => {}, []);
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
-    return <Spinner />
-  };
+    return <Spinner />;
+  }
 
   return (
     <div className="card">
       <h2 className="card-heading">Patch</h2>
       <h3 className="card-subheading">
-        <span className="card-desc">Update User</span> <br />Update a user by sending a patch request and data to the endpoint -{" "}
+        <span className="card-desc">Update User</span> <br />
+        Update a user by sending a patch request and data to the endpoint -{" "}
         {process.env.REACT_APP_API_USERS_ENDPOINT}/:id
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
+        <GetRequestInput
+          required={patchUserParamField.required}
+          label={patchUserParamField.label}
+          placeholder={patchUserParamField.placeholder}
+          id={patchUserParamField.id}
+          type={patchUserParamField.type}
+          setFormData={setParam}
+        />
         {patchUserInputArray.map((input) => (
           <CreateUserInput
             key={input.key}

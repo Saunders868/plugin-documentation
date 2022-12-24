@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { useAppDispatch } from "../hooks";
-import { makeRequest } from "../slices/loadErrorSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { addData } from "../slices/dataSlice";
+import { loading } from "../slices/loadErrorSlice";
 import {
   cartSchema,
+  globalStateType,
   InputInterface,
   orderSchema,
   productSchema,
   sessionSchema,
 } from "../types";
 
-import useAxios from "../utils/Axios";
+import { axiosCall } from "../utils/Axios";
+import GetRequestInput from "./GetRequestInput";
 import Input from "./Input";
 import Spinner from "./Spinner";
 
@@ -22,7 +25,7 @@ type componentProps = {
   title: string;
   subtitle: string;
   endpoint: string;
-  paramObject: any;
+  paramField: InputInterface;
 };
 
 // payload in formData gotten from input are not of correct type
@@ -33,41 +36,41 @@ const Card: FC<componentProps> = ({
   title,
   subtitle,
   endpoint,
-  paramObject
+  paramField,
 }: componentProps) => {
   const dispatch = useAppDispatch();
+
+  const data: any = useAppSelector((state: globalStateType) => state.data);
+  const load: boolean = useAppSelector(
+    (state: globalStateType) => state.loadError.loading
+  );
 
   // could pass type through or make open to all possible types
   const [formData, setFormData] = useState<
     sessionSchema | productSchema | cartSchema | orderSchema
   >(initialState);
 
-  const [param, setParam] = useState(paramObject)
-
-  // get load state from store
-  const { data, load } = useAxios(
-    process.env.REACT_APP_API_USERS_ENDPOINT!,
-    // this needs to be passed in through component or globel state
-    formData,
-    "post",
-    null
-  );
+  const [param, setParam] = useState<string>("");
 
   const dataToDisplay = JSON.stringify(data);
 
-  // console.log(formData);
+  const dynamicEndpoint = `${endpoint}/${param}`;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    dispatch(makeRequest(true));
+    dispatch(loading(true));
+    const dataAxios: Promise<any> = await axiosCall(
+      "patch",
+      "",
+      dynamicEndpoint,
+      formData
+    );
 
-    setTimeout(() => {
-      dispatch(makeRequest(false));
-    }, 1000);
+    // put dataAxios into global state
+    console.log("AXIOS DATA",dataAxios);
+    dispatch(addData(dataAxios));
   };
-
-  useEffect(() => {}, []);
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
@@ -82,6 +85,15 @@ const Card: FC<componentProps> = ({
         {subtitle} - {endpoint}
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
+        <GetRequestInput
+          required={paramField.required}
+          label={paramField.label}
+          placeholder={paramField.placeholder}
+          id={paramField.id}
+          type={paramField.type}
+          setFormData={setParam}
+        />
+
         {inputArray.map((input) => (
           <Input
             key={input.key}

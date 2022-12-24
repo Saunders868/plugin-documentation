@@ -13,10 +13,6 @@ interface componentProps {
   subtitle: string;
   inputArray?: InputInterface[];
   initialState: any;
-  product?: boolean;
-  user?: boolean;
-  cart?: boolean;
-  order?: boolean;
 }
 
 const GetRequestCard: FC<componentProps> = ({
@@ -25,10 +21,6 @@ const GetRequestCard: FC<componentProps> = ({
   subtitle,
   inputArray,
   initialState,
-  product,
-  user,
-  cart,
-  order,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -39,25 +31,28 @@ const GetRequestCard: FC<componentProps> = ({
 
   // this state would control the params being passed in to the request
   // set the param as an object with id as the starting state in the initial state passed in
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState<string>('');
 
-  console.log(formData);
+  // console.log(formData);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const dynamicEndpoint = `${endpoint}/${formData}`
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     dispatch(loading(true));
 
-    const dataAxios: Promise<any> = axiosCall(
+    const dataAxios: Promise<any> = await axiosCall(
       "get",
       "",
-      formData,
-      endpoint,
+      dynamicEndpoint,
       null
     );
 
     // put dataAxios into global state
+    console.log("AXIOS DATA",dataAxios);
     dispatch(addData(dataAxios));
+    
 
     dispatch(loading(false));
   };
@@ -90,10 +85,6 @@ const GetRequestCard: FC<componentProps> = ({
                 type={input.type}
                 label={input.label}
                 id={input.id}
-                product={product}
-                cart={cart}
-                order={order}
-                user={user}
               />
             ))
           : null}

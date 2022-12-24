@@ -13,10 +13,6 @@ const useAxios = (
   method: string,
   param: string | null
 ) => {
-  // console.log(
-  //   `url: ${url}, payload: ${payload}, method: ${method}, param: ${param}`
-  // );
-
   const dispatch = useAppDispatch();
 
   // move these states up to the global state
@@ -93,7 +89,6 @@ const instance = axios.create({
 export async function axiosCall(
   method: string,
   token: string,
-  params: {} | null,
   url: string,
   payload: object | null
 ) {
@@ -103,12 +98,11 @@ export async function axiosCall(
       url: url,
       headers: { Authorization: `Bearer ${token}` },
       method: method,
-      params: params
     });
 
     const serializedData = await response.data;
-    console.log(response);
-    console.log(serializedData);
+    console.log("RESPONSE", response);
+    console.log("SERIALIZED RESPONSE",serializedData);
 
     return serializedData;
     // add notification

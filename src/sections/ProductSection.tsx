@@ -12,6 +12,7 @@ import {
   initialProductState,
   paramInputArray,
   updateProductInputArray,
+  updateProductParamField,
 } from "../data";
 
 const PRODUCT_ENDPOINT: string = process.env.REACT_APP_API_PRODUCTS_ENDPOINT!;
@@ -44,21 +45,20 @@ const ProductSection = () => {
       <GetRequestCard
         title="product"
         subtitle="Get a product by sending a get request to the endpoint"
-        endpoint={`${PRODUCT_ENDPOINT}/:productId`}
+        endpoint={PRODUCT_ENDPOINT}
         inputArray={paramInputArray}
         initialState={initialParamState}
-        product={true}
       />
       <PatchRequestCard
         title="Update product"
         subtitle="Update a product by sending a patch request and data to the endpoint"
-        endpoint={`${PRODUCT_ENDPOINT}/:productId`}
+        endpoint={PRODUCT_ENDPOINT}
         initialState={initialPatchProductState}
         inputArray={updateProductInputArray}
-        paramObject={initialParamState}
+        paramField={updateProductParamField}
       />
       <DeleteRequestCard
-        endpoint={`${PRODUCT_ENDPOINT}/:productId`}
+        endpoint={PRODUCT_ENDPOINT}
         title="product"
         subtitle="Delete a product by sending a delete request to the endpoint"
         inputArray={paramInputArray}

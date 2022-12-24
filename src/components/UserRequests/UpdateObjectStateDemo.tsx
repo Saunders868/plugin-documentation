@@ -5,8 +5,12 @@ type componentProps = {
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<string>>;
+  setFormData: Dispatch<SetStateAction<object>>;
   type: string;
+  product?: boolean;
+  user?: boolean; 
+  order?: boolean;
+  cart?: boolean;
 };
 
 const GetRequestInput: FC<componentProps> = ({
@@ -16,10 +20,26 @@ const GetRequestInput: FC<componentProps> = ({
   id,
   setFormData,
   type,
+  product,
+  user,
+  cart,
+  order
 }: componentProps) => {
 
   const onChangeHandler = (e: any) => {
-    setFormData(e.target.value);
+    if (product) {
+      setFormData({ productId: e.target.value})
+    }
+    if (user) {
+      setFormData({ id: e.target.value})
+    }
+    if (cart) {
+      setFormData({ cartId: e.target.value})
+    }
+    if (order) {
+      setFormData({ orderId: e.target.value})
+    }
+    // setFormData(e.target.value);
   };
 
   return (

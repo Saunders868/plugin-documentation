@@ -28,24 +28,19 @@ const GetRequestCard: FC<componentProps> = ({
   );
 
   // this state would control the params being passed in to the request
-  const [formData, setFormData] = useState<object>({});
+  const [formData, setFormData] = useState<string>('');
 
-  // formdata param being passed as a query
-  // need to solve this
-  // const { data } = useAxios(endpoint, {}, "delete", formData);
+  const dynamicEndpoint = `${endpoint}/${formData}`
 
-
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     dispatch(loading(true));
 
-    const dataAxios = axiosCall(
+    const dataAxios: Promise<any> = await axiosCall(
       "delete",
       "",
-      formData,
-      endpoint,
+      dynamicEndpoint,
       null
     )
 
