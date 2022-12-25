@@ -3,11 +3,13 @@ import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
+import { addProductData } from "../slices/productDataSlice";
 import { loggedIn } from "../slices/sessionSlice";
 import {
   cartSchema,
   InputInterface,
   orderSchema,
+  productDataInterface,
   productSchema,
   sessionSchema,
   sessionType,
@@ -24,6 +26,7 @@ type componentProps = {
   subtitle: string;
   endpoint: string;
   login?: boolean;
+  product?: boolean;
 };
 
 const Card: FC<componentProps> = ({
@@ -33,19 +36,20 @@ const Card: FC<componentProps> = ({
   subtitle,
   endpoint,
   login,
+  product
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
   const data: any = useAppSelector((state) => state.data);
   const load: boolean = useAppSelector((state) => state.loadError.loading);
   const tokens: sessionType = useAppSelector((state) => state.session);
+  // product
+  const productData: productDataInterface = useAppSelector((state) => state.productData);
 
   const [formData, setFormData] = useState<
     sessionSchema | productSchema | cartSchema | orderSchema
   >(initialState);
   
-
-  const dataToDisplay = JSON.stringify(data);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -54,18 +58,34 @@ const Card: FC<componentProps> = ({
 
     dispatch(loading(true));
 
-    if (login) {
-      const dataAxios: sessionType = await axiosCall("post", tokens, endpoint, formData);
-      dispatch(loggedIn(dataAxios));
-      console.log("Login",dataAxios);
-      
-    }
-
+    // fallback
     const dataAxios: any = await axiosCall("post", tokens, endpoint, formData);
     dispatch(addData(dataAxios));
 
+    if (login) {
+      const dataAxios: Promise<sessionType> = await axiosCall("post", tokens, endpoint, formData);
+      dispatch(loggedIn(dataAxios));
+    }
+
+    if (product) {
+      const dataAxios: Promise<productDataInterface> = await axiosCall("post", tokens, endpoint, formData);
+      dispatch(addProductData(dataAxios));
+    }
+
     dispatch(loading(false));
   };
+
+  let dataToDisplay;
+
+  // fallback
+  dataToDisplay = JSON.stringify(data);
+
+  if (login) {
+    dataToDisplay = JSON.stringify(tokens);
+  }
+  if (product) {
+    dataToDisplay = JSON.stringify(productData);
+  }
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {

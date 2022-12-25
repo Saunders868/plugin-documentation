@@ -72,7 +72,12 @@ const GetRequestCard: FC<componentProps> = ({
 
     dispatch(loading(true));
 
-    const dataAxios: any = await axiosCall("get", tokens, dynamicEndpoint, null);
+    const dataAxios: any = await axiosCall(
+      "get",
+      tokens,
+      dynamicEndpoint,
+      null
+    );
 
     if (users) {
       const dataAxios: Promise<userDataInterface[]> = await axiosCall(
@@ -172,7 +177,9 @@ const GetRequestCard: FC<componentProps> = ({
         </div>
       </form>
 
-      {dataToDisplay ? <div className="card-response">{dataToDisplay}</div> : null}
+      {dataToDisplay ? (
+        <div className="card-response">{dataToDisplay}</div>
+      ) : null}
     </div>
   );
 };

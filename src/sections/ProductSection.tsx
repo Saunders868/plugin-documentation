@@ -30,6 +30,7 @@ const ProductSection = () => {
         endpoint={PRODUCT_ENDPOINT}
         initialState={initialProductState}
         inputArray={createProductInputArray}
+        product={true}
       />
       <GetRequestCard
         title="Products"
@@ -51,12 +52,14 @@ const ProductSection = () => {
         initialState={initialProductState}
         inputArray={updateProductInputArray}
         paramField={updateProductParamField}
+        product={true}
       />
       <DeleteRequestCard
         endpoint={PRODUCT_ENDPOINT}
         title="product"
         subtitle="Delete a product by sending a delete request to the endpoint"
         inputArray={paramInputArray}
+        product={true}
       />
     </section>
   );

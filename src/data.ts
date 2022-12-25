@@ -205,7 +205,7 @@ export const updateProductInputArray: InputInterface[] = [
     type: "text",
     placeholder: "description",
     label: "Description",
-    id: "description",
+    id: "desc",
     required: true,
     key: uuid(),
   },

@@ -2,7 +2,9 @@ import React, { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
-import { globalStateType, InputInterface, sessionType } from "../types";
+import { addProductData } from "../slices/productDataSlice";
+import { addUserData } from "../slices/userDataSlice";
+import { globalStateType, InputInterface, productDataInterface, sessionType, userDataInterface } from "../types";
 import { axiosCall } from "../utils/Axios";
 import GetRequestInput from "./GetRequestInput";
 import Spinner from "./Spinner";
@@ -12,6 +14,8 @@ interface componentProps {
   title: string;
   subtitle: string;
   inputArray?: InputInterface[];
+  user?: boolean;
+  product?: boolean;
 }
 
 const GetRequestCard: FC<componentProps> = ({
@@ -19,6 +23,8 @@ const GetRequestCard: FC<componentProps> = ({
   title,
   subtitle,
   inputArray,
+  user,
+  product
 }) => {
   const dispatch = useAppDispatch();
 
@@ -27,6 +33,14 @@ const GetRequestCard: FC<componentProps> = ({
     (state: globalStateType) => state.loadError.loading
   );
   const tokens: sessionType = useAppSelector((state) => state.session);
+
+  const userData: userDataInterface = useAppSelector(
+    (state: globalStateType) => state.userData
+  );
+
+  const productData: productDataInterface = useAppSelector(
+    (state) => state.productData
+  );
 
 
   // this state would control the params being passed in to the request
@@ -46,13 +60,45 @@ const GetRequestCard: FC<componentProps> = ({
       null
     )
 
+    if (user) {
+      const dataAxios: Promise<userDataInterface> = await axiosCall(
+        "delete",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addUserData(dataAxios));
+    }
+
+    if (product) {
+      const dataAxios: Promise<productDataInterface> = await axiosCall(
+        "delete",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addProductData(dataAxios));
+    }
+
     // put dataAxios into global state
     dispatch(addData(dataAxios));
 
     dispatch(loading(false));
   };
 
-  const dataToDisplay = JSON.stringify(data);
+  let dataToDisplay;
+
+  dataToDisplay = JSON.stringify(data);
+  if (user) {
+    dataToDisplay = JSON.stringify(userData);
+  }
+
+  if (product) {
+    dataToDisplay = JSON.stringify(productData);
+  }
+
 
   if (load) {
     return <Spinner />
@@ -88,7 +134,7 @@ const GetRequestCard: FC<componentProps> = ({
         </div>
       </form>
 
-      {data ? <div className="card-response">{dataToDisplay}</div> : null}
+      {dataToDisplay ? <div className="card-response">{dataToDisplay}</div> : null}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { patchUserInputArray, patchUserParamField } from "../../data";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addData } from "../../slices/dataSlice";
 import { loading } from "../../slices/loadErrorSlice";
-import { formType, globalStateType, sessionType } from "../../types";
+import { formType, globalStateType, sessionType, userDataInterface } from "../../types";
 
 import { axiosCall } from "../../utils/Axios";
 import GetRequestInput from "../GetRequestInput";
@@ -29,7 +29,7 @@ const Card: FC = () => {
   const dynamicEndpoint = `${process.env
     .REACT_APP_API_USERS_ENDPOINT!}/${param}`;
 
-  const data: any = useAppSelector((state: globalStateType) => state.data);
+  const data: userDataInterface = useAppSelector((state: globalStateType) => state.userData);
   const load: boolean = useAppSelector(
     (state: globalStateType) => state.loadError.loading
   );
@@ -43,7 +43,7 @@ const Card: FC = () => {
     e.preventDefault();
 
     dispatch(loading(true));
-    const dataAxios: Promise<any> = await axiosCall(
+    const dataAxios: Promise<userDataInterface> = await axiosCall(
       "patch",
       tokens,
       dynamicEndpoint,
@@ -60,10 +60,8 @@ const Card: FC = () => {
         },
       }
     );
-
-    // put dataAxios into global state
-    console.log("AXIOS DATA", dataAxios);
     dispatch(addData(dataAxios));
+    dispatch(loading(false));
   };
 
   // use load state to render a spinner instead of the card | Dont need error state

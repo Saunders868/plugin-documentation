@@ -42,6 +42,7 @@ const UserSection = () => {
         title="user"
         subtitle="Delete a user by sending a delete request to the endpoint"
         inputArray={paramInputArray}
+        user={true}
       />
     </section>
   );

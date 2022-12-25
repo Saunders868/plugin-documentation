@@ -3,11 +3,13 @@ import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
+import { addProductData } from "../slices/productDataSlice";
 import {
   cartSchema,
   globalStateType,
   InputInterface,
   orderSchema,
+  productDataInterface,
   productSchema,
   sessionSchema,
   sessionType,
@@ -27,6 +29,7 @@ type componentProps = {
   subtitle: string;
   endpoint: string;
   paramField: InputInterface;
+  product?: boolean;
 };
 
 // payload in formData gotten from input are not of correct type
@@ -38,6 +41,7 @@ const Card: FC<componentProps> = ({
   subtitle,
   endpoint,
   paramField,
+  product
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
@@ -46,6 +50,7 @@ const Card: FC<componentProps> = ({
     (state: globalStateType) => state.loadError.loading
   );
   const tokens: sessionType = useAppSelector((state) => state.session);
+  const productData: productDataInterface = useAppSelector((state) => state.productData)
 
   // could pass type through or make open to all possible types
   const [formData, setFormData] = useState<
@@ -53,8 +58,6 @@ const Card: FC<componentProps> = ({
   >(initialState);
 
   const [param, setParam] = useState<string>("");
-
-  const dataToDisplay = JSON.stringify(data);
 
   const dynamicEndpoint = `${endpoint}/${param}`;
 
@@ -69,10 +72,30 @@ const Card: FC<componentProps> = ({
       formData
     );
 
-    // put dataAxios into global state
-    console.log("AXIOS DATA",dataAxios);
+    if (product) {
+      const dataAxios: Promise<productDataInterface> = await axiosCall(
+        "patch",
+        tokens,
+        dynamicEndpoint,
+        formData
+      );
+
+      dispatch(addProductData(dataAxios));
+    }
+
+    dispatch(loading(false));
+
     dispatch(addData(dataAxios));
   };
+
+  let dataToDisplay;
+
+  // fallback
+  dataToDisplay = JSON.stringify(data);
+
+  if (product) {
+    dataToDisplay = JSON.stringify(productData);
+  }
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
