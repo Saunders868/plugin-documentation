@@ -10,10 +10,6 @@ import { paramInputArray } from "../data";
 
 const USER_ENDPOINT: string = process.env.REACT_APP_API_USERS_ENDPOINT!;
 
-const initialStateUser = {
-  id: ''
-}
-
 const UserSection = () => {
   return (
     <section>
@@ -31,14 +27,14 @@ const UserSection = () => {
         endpoint={USER_ENDPOINT}
         title="users"
         subtitle="Get all users by sending a get request to the endpoint"
-        initialState={initialStateUser}
+        users={true}
       />
       <GetRequestCard
         endpoint={USER_ENDPOINT}
         title="user"
         subtitle="Get a user by sending a get request to the endpoint"
         inputArray={paramInputArray}
-        initialState={initialStateUser}
+        user={true}
       />
       <UserPatchRequest />
       <DeleteRequestCard

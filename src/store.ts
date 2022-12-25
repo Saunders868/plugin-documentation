@@ -1,6 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dataSlice, loadErrorSlice, sessionSlice, userSlice } from "./slices";
-
+import {
+  dataSlice,
+  loadErrorSlice,
+  productDataSlice,
+  productsDataSlice,
+  sessionSlice,
+  userDataSlice,
+  usersDataSlice,
+  userSlice,
+} from "./slices";
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -10,6 +18,10 @@ export const store = configureStore({
     user: userSlice,
     session: sessionSlice,
     data: dataSlice,
-    loadError: loadErrorSlice
+    loadError: loadErrorSlice,
+    usersData: usersDataSlice,
+    userData: userDataSlice,
+    productsData: productsDataSlice,
+    productData: productDataSlice,
   },
 });

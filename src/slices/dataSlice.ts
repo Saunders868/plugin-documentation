@@ -15,6 +15,6 @@ export const dataSlice: Slice = createSlice({
   },
 });
 
-export const { addData, removeData } = dataSlice.actions;
+export const { addData } = dataSlice.actions;
 
 export default dataSlice.reducer;

@@ -10,6 +10,7 @@ import {
   orderSchema,
   productSchema,
   sessionSchema,
+  sessionType,
 } from "../types";
 
 import { axiosCall } from "../utils/Axios";
@@ -44,6 +45,7 @@ const Card: FC<componentProps> = ({
   const load: boolean = useAppSelector(
     (state: globalStateType) => state.loadError.loading
   );
+  const tokens: sessionType = useAppSelector((state) => state.session);
 
   // could pass type through or make open to all possible types
   const [formData, setFormData] = useState<
@@ -62,7 +64,7 @@ const Card: FC<componentProps> = ({
     dispatch(loading(true));
     const dataAxios: Promise<any> = await axiosCall(
       "patch",
-      "",
+      tokens,
       dynamicEndpoint,
       formData
     );

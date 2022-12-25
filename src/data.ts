@@ -163,7 +163,7 @@ export const createProductInputArray: InputInterface[] = [
     type: "text",
     placeholder: "description",
     label: "Description",
-    id: "description",
+    id: "desc",
     required: true,
     key: uuid(),
   },
@@ -181,13 +181,6 @@ export const initialProductState: productSchema = {
   title: "",
   desc: "",
   price: 0,
-};
-
-export const initialPatchProductState: productSchema = {
-  title: "",
-  desc: "",
-  price: 0,
-  param: "",
 };
 
 export const updateProductParamField: InputInterface = {

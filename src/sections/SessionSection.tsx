@@ -18,6 +18,7 @@ const SessionSection = () => {
         endpoint={process.env.REACT_APP_API_SESSIONS_ENDPOINT!}
         initialState={sessionInitialState}
         inputArray={sessionInputArray}
+        login={true}
       />
     </section>
   );

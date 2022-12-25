@@ -4,7 +4,7 @@ import { patchUserInputArray, patchUserParamField } from "../../data";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addData } from "../../slices/dataSlice";
 import { loading } from "../../slices/loadErrorSlice";
-import { formType, globalStateType } from "../../types";
+import { formType, globalStateType, sessionType } from "../../types";
 
 import { axiosCall } from "../../utils/Axios";
 import GetRequestInput from "../GetRequestInput";
@@ -33,6 +33,7 @@ const Card: FC = () => {
   const load: boolean = useAppSelector(
     (state: globalStateType) => state.loadError.loading
   );
+  const tokens: sessionType = useAppSelector((state) => state.session);
 
   const dataToDisplay = JSON.stringify(data);
 
@@ -44,7 +45,7 @@ const Card: FC = () => {
     dispatch(loading(true));
     const dataAxios: Promise<any> = await axiosCall(
       "patch",
-      "",
+      tokens,
       dynamicEndpoint,
       {
         email: {

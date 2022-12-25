@@ -24,6 +24,11 @@ const Card: FC<componentProps> = ({
 
   const onChangeHandler = (e: any) => {
     setFormData({ ...formData, [stateID]: e.target.value });
+    
+    if (type === "number") {
+      const number = parseFloat(e.target.value)
+      setFormData({ ...formData, [stateID]:number}) 
+    }
   };
 
   return (

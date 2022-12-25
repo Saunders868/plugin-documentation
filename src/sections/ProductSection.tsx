@@ -8,7 +8,6 @@ import {
 } from "../components";
 import {
   createProductInputArray,
-  initialPatchProductState,
   initialProductState,
   paramInputArray,
   updateProductInputArray,
@@ -16,10 +15,6 @@ import {
 } from "../data";
 
 const PRODUCT_ENDPOINT: string = process.env.REACT_APP_API_PRODUCTS_ENDPOINT!;
-
-const initialParamState = {
-  productId: "",
-};
 
 const ProductSection = () => {
   return (
@@ -40,20 +35,20 @@ const ProductSection = () => {
         title="Products"
         subtitle="Get all products by sending a get request to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
-        initialState={initialParamState}
+        products={true}
       />
       <GetRequestCard
         title="product"
         subtitle="Get a product by sending a get request to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
         inputArray={paramInputArray}
-        initialState={initialParamState}
+        product={true}
       />
       <PatchRequestCard
         title="Update product"
         subtitle="Update a product by sending a patch request and data to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
-        initialState={initialPatchProductState}
+        initialState={initialProductState}
         inputArray={updateProductInputArray}
         paramField={updateProductParamField}
       />

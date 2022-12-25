@@ -6,13 +6,16 @@ import {
   PostRequests,
   RouteInfo,
 } from "../components";
-import { createCartInputArray, initialCartState, initialPatchCartState, paramInputArray, updateCartInputArray, updateCartParamsField } from "../data";
+import {
+  createCartInputArray,
+  initialCartState,
+  initialPatchCartState,
+  paramInputArray,
+  updateCartInputArray,
+  updateCartParamsField,
+} from "../data";
 
 const CART_ENDPOINT: string = process.env.REACT_APP_API_CARTS_ENDPOINT!;
-
-const initialParamState = {
-  cartId: "",
-};
 
 const CartSection = () => {
   return (
@@ -33,14 +36,12 @@ const CartSection = () => {
         endpoint={CART_ENDPOINT}
         title="carts"
         subtitle="Get all carts by sending a get request to the endpoint"
-        initialState={initialParamState}
       />
       <GetRequestCard
         endpoint={CART_ENDPOINT}
         title="cart"
         subtitle="Get a cart by sending a get request to the endpoint"
         inputArray={paramInputArray}
-        initialState={initialParamState}
       />
       <PatchRequestCard
         title="Update product"

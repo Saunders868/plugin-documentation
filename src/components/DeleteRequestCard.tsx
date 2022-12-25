@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
-import { globalStateType, InputInterface } from "../types";
+import { globalStateType, InputInterface, sessionType } from "../types";
 import { axiosCall } from "../utils/Axios";
 import GetRequestInput from "./GetRequestInput";
 import Spinner from "./Spinner";
@@ -26,6 +26,8 @@ const GetRequestCard: FC<componentProps> = ({
   const load: boolean = useAppSelector(
     (state: globalStateType) => state.loadError.loading
   );
+  const tokens: sessionType = useAppSelector((state) => state.session);
+
 
   // this state would control the params being passed in to the request
   const [formData, setFormData] = useState<string>('');
@@ -39,7 +41,7 @@ const GetRequestCard: FC<componentProps> = ({
 
     const dataAxios: Promise<any> = await axiosCall(
       "delete",
-      "",
+      tokens,
       dynamicEndpoint,
       null
     )

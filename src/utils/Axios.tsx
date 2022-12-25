@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addData } from "../slices/dataSlice";
 import { loading, errorState } from "../slices/loadErrorSlice";
-import { globalStateType } from "../types";
+import { globalStateType, sessionType } from "../types";
 
 // this is making request to all endpoints instead of a selected endpoint
 // could use global state to determine which endpoint to request?
@@ -88,7 +88,7 @@ const instance = axios.create({
 
 export async function axiosCall(
   method: string,
-  token: string,
+  token: sessionType,
   url: string,
   payload: object | null
 ) {
@@ -96,13 +96,13 @@ export async function axiosCall(
     const response: AxiosResponse = await instance.request({
       data: payload,
       url: url,
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 'authorization': token.accessToken, 'x-refresh': token.refreshToken },
       method: method,
     });
 
     const serializedData = await response.data;
     console.log("RESPONSE", response);
-    console.log("SERIALIZED RESPONSE",serializedData);
+    console.log("SERIALIZED RESPONSE", serializedData);
 
     return serializedData;
     // add notification

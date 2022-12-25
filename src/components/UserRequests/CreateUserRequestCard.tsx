@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { useAppDispatch } from "../../hooks";
-import { makeRequest } from "../../slices/loadErrorSlice";
-import { formType } from "../../types";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { loading } from "../../slices/loadErrorSlice";
+import { formType, globalStateType, sessionType, userDataInterface } from "../../types";
 
-import useAxios from "../../utils/Axios";
+import { axiosCall } from "../../utils/Axios";
 import CreateUserInput from "./CreateUserInput";
 import Spinner from "../Spinner";
 import { createUserInputArray } from "../../data";
+import { addUserData } from "../../slices/userDataSlice";
 
 const initialState: formType = {
   email: "",
@@ -23,44 +24,51 @@ const Card: FC = () => {
 
   const [formData, setFormData] = useState<formType>(initialState);
 
-  // need to make seperate input component for this post request card
-
-  const { data, load } = useAxios(
-    process.env.REACT_APP_API_USERS_ENDPOINT!,
-    // this needs to be passed in through component or globel state
-    {
-      email: {
-        address: formData.email,
-      },
-      password: formData.password,
-      passwordConfirmation: formData.passwordConfirmation,
-      username: formData.username,
-      profile: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-      },
-    },
-    "post",
-    null
+  const userData: userDataInterface = useAppSelector(
+    (state: globalStateType) => state.userData
   );
+  const load: boolean = useAppSelector(
+    (state: globalStateType) => state.loadError.loading
+  );
+  const tokens: sessionType = useAppSelector((state) => state.session);
 
-  const dataToDisplay = JSON.stringify(data);
+  const dataToDisplay = JSON.stringify(userData);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const endpoint = process.env.REACT_APP_API_USERS_ENDPOINT!;
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
-    dispatch(makeRequest(true));
+    dispatch(loading(true));
 
-    setTimeout(() => {
-      dispatch(makeRequest(false));
-    }, 1000);
+    const dataAxios: Promise<userDataInterface> = await axiosCall(
+      "post",
+      tokens,
+      endpoint,
+      {
+        email: {
+          address: formData.email,
+        },
+        password: formData.password,
+        passwordConfirmation: formData.passwordConfirmation,
+        username: formData.username,
+        profile: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+        },
+      }
+    );
+
+    dispatch(addUserData(dataAxios));
+
+    dispatch(loading(false));
   };
 
-  useEffect(() => {}, []);
-  // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
-    return <Spinner />
-  };
+    return <Spinner />;
+  }
   return (
     <div className="card">
       <h2 className="card-heading">POST</h2>
@@ -70,20 +78,19 @@ const Card: FC = () => {
         {process.env.REACT_APP_API_USERS_ENDPOINT}
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
-        {/* create input array */}
         {createUserInputArray.map((input) => (
           <CreateUserInput
-          key={input.key}
-          setFormData={setFormData}
-          formData={formData}
-          required={input.required}
-          type={input.type}
-          placeholder={input.placeholder}
-          label={input.label}
-          id={input.id}
-        />
+            key={input.key}
+            setFormData={setFormData}
+            formData={formData}
+            required={input.required}
+            type={input.type}
+            placeholder={input.placeholder}
+            label={input.label}
+            id={input.id}
+          />
         ))}
-        
+
         <div>
           <button className="btn" type="submit">
             submit
@@ -91,7 +98,9 @@ const Card: FC = () => {
         </div>
       </form>
 
-      {data ? <div className="card-response">{dataToDisplay}</div> : null}
+      {dataToDisplay ? (
+        <div className="card-response">{dataToDisplay}</div>
+      ) : null}
     </div>
   );
 };

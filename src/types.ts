@@ -1,3 +1,5 @@
+import { Slice } from "@reduxjs/toolkit";
+
 // REDUX TYPES
 export interface sessionType {
   accessToken: string;
@@ -20,6 +22,10 @@ export interface globalStateType {
   session: any;
   data: any;
   loadError: any;
+  usersData: any;
+  userData: any;
+  // productsData: any;
+  // productData: any;
 }
 
 // FORM TYPE
@@ -43,7 +49,7 @@ type emailType = {
   address: string;
 };
 
-export type userType = {
+export interface userType {
   email: emailType;
   password: string;
   passwordConfirmation: string;
@@ -62,7 +68,6 @@ export type productSchema = {
   title: string;
   desc: string;
   price: number;
-  param?: string;
 };
 
 // CART TYPES
@@ -86,4 +91,44 @@ export interface InputInterface {
   id: string;
   required: boolean;
   key: string;
+}
+
+
+// data adding interfaces
+export interface userDataInterface extends userType {
+  profile: {
+    address: {
+      street1: string,
+      street2: string,
+      city: string,
+      state: string,
+      country: string,
+      zip: string,
+    },
+    firstName: string,
+    lastName: string,
+    avatar: string,
+    bio: string,
+  },
+  email: {
+    address: string,
+    validated: boolean,
+    _id: string,
+  }
+  _id: string,
+  active: boolean,
+  isAdmin: boolean,
+  createdAt: string,
+  updatedAt: string,
+  __v: number,
+}
+
+export interface productDataInterface extends productSchema {
+  _id: string,
+  user: string,
+  image: string,
+  id: string,
+  createdAt: string,
+  updatedAt: string,
+  __v: number,
 }

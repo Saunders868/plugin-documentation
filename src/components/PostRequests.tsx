@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FC } from "react";
-import { useAppDispatch } from "../hooks";
-import { makeRequest } from "../slices/loadErrorSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { addData } from "../slices/dataSlice";
+import { loading } from "../slices/loadErrorSlice";
 import { loggedIn } from "../slices/sessionSlice";
 import {
   cartSchema,
@@ -9,9 +10,10 @@ import {
   orderSchema,
   productSchema,
   sessionSchema,
+  sessionType,
 } from "../types";
 
-import useAxios from "../utils/Axios";
+import { axiosCall } from "../utils/Axios";
 import Input from "./Input";
 import Spinner from "./Spinner";
 
@@ -30,40 +32,40 @@ const Card: FC<componentProps> = ({
   title,
   subtitle,
   endpoint,
-  login
+  login,
 }: componentProps) => {
   const dispatch = useAppDispatch();
+
+  const data: any = useAppSelector((state) => state.data);
+  const load: boolean = useAppSelector((state) => state.loadError.loading);
+  const tokens: sessionType = useAppSelector((state) => state.session);
 
   const [formData, setFormData] = useState<
     sessionSchema | productSchema | cartSchema | orderSchema
   >(initialState);
-
-  // get load state from store
-  const { data, load } = useAxios(
-    process.env.REACT_APP_API_USERS_ENDPOINT!,
-    // this needs to be passed in through component or globel state
-    formData,
-    "post",
-    null
-  );
+  
 
   const dataToDisplay = JSON.stringify(data);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
-    dispatch(makeRequest(true));
+    dispatch(loading(true));
 
-    // if (login) {
-      // dispatch(loggedIn(token))
-    // }
+    if (login) {
+      const dataAxios: sessionType = await axiosCall("post", tokens, endpoint, formData);
+      dispatch(loggedIn(dataAxios));
+      console.log("Login",dataAxios);
+      
+    }
 
-    setTimeout(() => {
-      dispatch(makeRequest(false));
-    }, 1000);
+    const dataAxios: any = await axiosCall("post", tokens, endpoint, formData);
+    dispatch(addData(dataAxios));
+
+    dispatch(loading(false));
   };
-
-  useEffect(() => {}, []);
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
@@ -97,7 +99,7 @@ const Card: FC<componentProps> = ({
         </div>
       </form>
 
-      {data ? <div className="card-response">{dataToDisplay}</div> : null}
+      {dataToDisplay ? <div className="card-response">{dataToDisplay}</div> : null}
     </div>
   );
 };
