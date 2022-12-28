@@ -14,7 +14,7 @@ const initalState: productDataInterface = {
   __v: 0,
 };
 export const productDataSlice: Slice = createSlice({
-  name: "productsData",
+  name: "productData",
   initialState: initalState,
   reducers: {
     addProductData: (

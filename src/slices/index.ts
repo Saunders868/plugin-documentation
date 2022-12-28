@@ -6,3 +6,5 @@ export { default as userDataSlice } from "./userDataSlice";
 export { default as usersDataSlice } from "./usersDataSlice";
 export { default as productDataSlice } from "./productDataSlice";
 export { default as productsDataSlice } from "./productsDataSlice";
+export { default as cartDataSlice } from "./cartDataSlice";
+export { default as cartsDataSlice } from "./cartsDataSlice";

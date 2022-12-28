@@ -31,28 +31,31 @@ const CartSection = () => {
         endpoint={CART_ENDPOINT}
         initialState={initialCartState}
         inputArray={createCartInputArray}
+        cart={true}
       />
       <GetRequestCard
         endpoint={CART_ENDPOINT}
         title="carts"
         subtitle="Get all carts by sending a get request to the endpoint"
+        carts={true}
       />
       <GetRequestCard
         endpoint={CART_ENDPOINT}
         title="cart"
         subtitle="Get a cart by sending a get request to the endpoint"
         inputArray={paramInputArray}
+        cart={true}
       />
       <PatchRequestCard
         title="Update product"
         subtitle="Update a product by sending a patch request and data to the endpoint"
-        endpoint={`${CART_ENDPOINT}/:cartId`}
+        endpoint={CART_ENDPOINT}
         initialState={initialPatchCartState}
         inputArray={updateCartInputArray}
         paramField={updateCartParamsField}
       />
       <DeleteRequestCard
-        endpoint={`${CART_ENDPOINT}/:id`}
+        endpoint={CART_ENDPOINT}
         title="cart"
         subtitle="Delete a cart by sending a delete request to the endpoint"
         inputArray={paramInputArray}

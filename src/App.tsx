@@ -1,6 +1,11 @@
 import React from "react";
 import { APIdescription } from "./components";
-import { ProductSection, SessionSection, UserSection } from "./sections";
+import {
+  CartSection,
+  ProductSection,
+  SessionSection,
+  UserSection,
+} from "./sections";
 
 function App() {
   return (
@@ -15,6 +20,8 @@ function App() {
           <UserSection />
           {/* product routes */}
           <ProductSection />
+          {/* cart routes */}
+          <CartSection />
         </div>
       </main>
       <footer className="flex justify-center items-center">

@@ -1,34 +1,41 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { formType, orderSchema, productSchema, sessionSchema } from "../types";
+import { Body } from "../types";
 
 type componentProps = {
   required: boolean;
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<formType | sessionSchema | productSchema | orderSchema>>;
-  formData: formType | sessionSchema | productSchema | orderSchema;
+  setCartState: Dispatch<SetStateAction<Body>>;
+  cartState: Body;
   type: string;
 };
 
-const Input: FC<componentProps> = ({
+const HandleArrayInput: FC<componentProps> = ({
   required,
   label,
   placeholder,
   id,
-  setFormData,
-  formData,
+  setCartState,
+  cartState,
   type,
 }: componentProps) => {
-  const stateID = id;
-
   const onChangeHandler = (e: any) => {
-    setFormData({ ...formData, [stateID]: e.target.value });
-    
-    if (type === "number") {
-      const number = parseFloat(e.target.value)
-      setFormData({ ...formData, [stateID]:number}) 
-    }
+    const newArray = cartState.products?.map((input) => {
+      if (type === "number") {
+        const number = parseFloat(e.target.value);
+        return {
+          ...input,
+          quantity: number,
+        };
+      } else {
+        return {
+          ...input,
+          product_id: e.target.value,
+        };
+      }
+    });
+    setCartState({products: newArray});
   };
 
   return (
@@ -50,4 +57,4 @@ const Input: FC<componentProps> = ({
   );
 };
 
-export default Input;
+export default HandleArrayInput;

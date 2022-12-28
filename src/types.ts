@@ -55,7 +55,7 @@ export interface userType {
   passwordConfirmation: string;
   username: string;
   profile?: profileType;
-};
+}
 
 // SESSION TYPES
 export type sessionSchema = {
@@ -71,6 +71,16 @@ export type productSchema = {
 };
 
 // CART TYPES
+
+export interface cartItemInterface {
+  product_id: string;
+  quantity: number;
+}
+
+export interface Body {
+  products: cartItemInterface[];
+}
+
 export type cartSchema = [
   {
     product_id: string;
@@ -93,42 +103,61 @@ export interface InputInterface {
   key: string;
 }
 
-
 // data adding interfaces
 export interface userDataInterface extends userType {
   profile: {
     address: {
-      street1: string,
-      street2: string,
-      city: string,
-      state: string,
-      country: string,
-      zip: string,
-    },
-    firstName: string,
-    lastName: string,
-    avatar: string,
-    bio: string,
-  },
+      street1: string;
+      street2: string;
+      city: string;
+      state: string;
+      country: string;
+      zip: string;
+    };
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    bio: string;
+  };
   email: {
-    address: string,
-    validated: boolean,
-    _id: string,
-  }
-  _id: string,
-  active: boolean,
-  isAdmin: boolean,
-  createdAt: string,
-  updatedAt: string,
-  __v: number,
+    address: string;
+    validated: boolean;
+    _id: string;
+  };
+  _id: string;
+  active: boolean;
+  isAdmin: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface productDataInterface extends productSchema {
-  _id: string,
-  user: string,
-  image: string,
-  id: string,
-  createdAt: string,
-  updatedAt: string,
-  __v: number,
+  _id: string;
+  user: string;
+  image: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+interface Product {
+  product_id: string;
+  quantity: number;
+  title: string;
+  price: number;
+  _id: string;
+}
+
+export interface cartDataInterface {
+  _id: string;
+  userId: string;
+  products: Product[];
+  active: true;
+  id: string;
+  modifiedOn: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }

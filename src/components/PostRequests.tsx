@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { addCartData } from "../slices/cartDataSlice";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
 import { addProductData } from "../slices/productDataSlice";
 import { loggedIn } from "../slices/sessionSlice";
 import {
-  cartSchema,
+  Body,
+  cartDataInterface,
   InputInterface,
   orderSchema,
   productDataInterface,
@@ -16,6 +18,7 @@ import {
 } from "../types";
 
 import { axiosCall } from "../utils/Axios";
+import HandleArrayInput from "./HandleArrayInput";
 import Input from "./Input";
 import Spinner from "./Spinner";
 
@@ -27,7 +30,9 @@ type componentProps = {
   endpoint: string;
   login?: boolean;
   product?: boolean;
+  cart?: boolean;
 };
+
 
 const Card: FC<componentProps> = ({
   initialState,
@@ -36,7 +41,8 @@ const Card: FC<componentProps> = ({
   subtitle,
   endpoint,
   login,
-  product
+  product,
+  cart,
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
@@ -44,12 +50,18 @@ const Card: FC<componentProps> = ({
   const load: boolean = useAppSelector((state) => state.loadError.loading);
   const tokens: sessionType = useAppSelector((state) => state.session);
   // product
-  const productData: productDataInterface = useAppSelector((state) => state.productData);
+  const productData: productDataInterface = useAppSelector(
+    (state) => state.productData
+  );
+  // cart
+  const cartData: cartDataInterface = useAppSelector((state) => state.cartData);
 
   const [formData, setFormData] = useState<
-    sessionSchema | productSchema | cartSchema | orderSchema
+    sessionSchema | productSchema | orderSchema
   >(initialState);
-  
+
+  const [cartState, setCartState] = useState<Body>(initialState);
+  console.log(cartState);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -63,13 +75,33 @@ const Card: FC<componentProps> = ({
     dispatch(addData(dataAxios));
 
     if (login) {
-      const dataAxios: Promise<sessionType> = await axiosCall("post", tokens, endpoint, formData);
+      const dataAxios: Promise<sessionType> = await axiosCall(
+        "post",
+        tokens,
+        endpoint,
+        formData
+      );
       dispatch(loggedIn(dataAxios));
     }
 
     if (product) {
-      const dataAxios: Promise<productDataInterface> = await axiosCall("post", tokens, endpoint, formData);
+      const dataAxios: Promise<productDataInterface> = await axiosCall(
+        "post",
+        tokens,
+        endpoint,
+        formData
+      );
       dispatch(addProductData(dataAxios));
+    }
+
+    if (cart) {
+      const dataAxios: Promise<cartDataInterface> = await axiosCall(
+        "post",
+        tokens,
+        endpoint,
+        cartState
+      );
+      dispatch(addCartData(dataAxios));
     }
 
     dispatch(loading(false));
@@ -86,10 +118,48 @@ const Card: FC<componentProps> = ({
   if (product) {
     dataToDisplay = JSON.stringify(productData);
   }
+  if (cart) {
+    dataToDisplay = JSON.stringify(cartData);
+  }
 
   // use load state to render a spinner instead of the card | Dont need error state
   if (load) {
     return <Spinner />;
+  }
+
+  if (cart) {
+    return (
+      <div className="card">
+        <h2 className="card-heading">post</h2>
+        <h3 className="card-subheading">
+          <span className="card-desc">{title}</span> <br />
+          {subtitle} - {endpoint}
+        </h3>
+        <form className="form" onSubmit={(e) => handleSubmit(e)}>
+          {inputArray.map((input) => (
+            <HandleArrayInput
+              key={input.key}
+              setCartState={setCartState}
+              cartState={cartState}
+              required={input.required}
+              placeholder={input.placeholder}
+              type={input.type}
+              label={input.label}
+              id={input.id}
+            />
+          ))}
+          <div>
+            <button className="btn" type="submit">
+              submit
+            </button>
+          </div>
+        </form>
+
+        {dataToDisplay ? (
+          <div className="card-response">{dataToDisplay}</div>
+        ) : null}
+      </div>
+    );
   }
 
   return (
@@ -119,7 +189,9 @@ const Card: FC<componentProps> = ({
         </div>
       </form>
 
-      {dataToDisplay ? <div className="card-response">{dataToDisplay}</div> : null}
+      {dataToDisplay ? (
+        <div className="card-response">{dataToDisplay}</div>
+      ) : null}
     </div>
   );
 };

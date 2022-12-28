@@ -1,6 +1,6 @@
 //  put the array of data for each route in this file to map through when ready
 import uuid from "react-uuid";
-import { cartSchema, InputInterface, productSchema, sessionSchema } from "./types";
+import { Body, cartSchema, InputInterface, productSchema, sessionSchema } from "./types";
 // USER DATA
 export const createUserInputArray: InputInterface[] = [
   {
@@ -220,12 +220,12 @@ export const updateProductInputArray: InputInterface[] = [
 ];
 
 // CART DATA
-export const initialCartState: cartSchema = [
-  {
+export const initialCartState: Body = {
+  products: [{
     product_id: "",
     quantity: 0,
-  },
-];
+  }],
+};
 
 export const createCartInputArray: InputInterface[] = [
   {

@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
+import { addCartData } from "../slices/cartDataSlice";
+import { addCartsData } from "../slices/cartsDataSlice";
 import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
 import { addProductData } from "../slices/productDataSlice";
@@ -7,6 +9,7 @@ import { addProductsData } from "../slices/productsDataSlice";
 import { addUserData } from "../slices/userDataSlice";
 import { addUsersData } from "../slices/usersDataSlice";
 import {
+  cartDataInterface,
   globalStateType,
   InputInterface,
   productDataInterface,
@@ -26,6 +29,8 @@ interface componentProps {
   users?: boolean;
   product?: boolean;
   products?: boolean;
+  cart?: boolean;
+  carts?: boolean;
 }
 
 const GetRequestCard: FC<componentProps> = ({
@@ -37,6 +42,8 @@ const GetRequestCard: FC<componentProps> = ({
   user,
   product,
   products,
+  cart,
+  carts
 }) => {
   const dispatch = useAppDispatch();
 
@@ -59,6 +66,13 @@ const GetRequestCard: FC<componentProps> = ({
   );
   const productData: productDataInterface = useAppSelector(
     (state) => state.productData
+  );
+  // cart states
+  const cartData: cartDataInterface = useAppSelector(
+    (state) => state.cartData
+  );
+  const cartsData: cartDataInterface[] = useAppSelector(
+    (state) => state.cartsData
   );
 
   const [formData, setFormData] = useState<string>("");
@@ -122,6 +136,28 @@ const GetRequestCard: FC<componentProps> = ({
       dispatch(addProductData(dataAxios));
     }
 
+    if (carts) {
+      const dataAxios: Promise<cartDataInterface[]> = await axiosCall(
+        "get",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addCartsData(dataAxios));
+    }
+
+    if (cart) {
+      const dataAxios: Promise<cartDataInterface> = await axiosCall(
+        "get",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addCartData(dataAxios));
+    }
+
     dispatch(addData(dataAxios));
 
     dispatch(loading(false));
@@ -142,6 +178,12 @@ const GetRequestCard: FC<componentProps> = ({
   }
   if (products) {
     dataToDisplay = JSON.stringify(productsData);
+  }
+  if (cart) {
+    dataToDisplay = JSON.stringify(cartData);
+  }
+  if (carts) {
+    dataToDisplay = JSON.stringify(cartsData);
   }
 
   if (load) {

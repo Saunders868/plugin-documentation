@@ -5,7 +5,6 @@ import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
 import { addProductData } from "../slices/productDataSlice";
 import {
-  cartSchema,
   globalStateType,
   InputInterface,
   orderSchema,
@@ -54,7 +53,7 @@ const Card: FC<componentProps> = ({
 
   // could pass type through or make open to all possible types
   const [formData, setFormData] = useState<
-    sessionSchema | productSchema | cartSchema | orderSchema
+    sessionSchema | productSchema | orderSchema
   >(initialState);
 
   const [param, setParam] = useState<string>("");

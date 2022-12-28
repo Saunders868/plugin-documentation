@@ -1,5 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import {
+  cartDataSlice,
+  cartsDataSlice,
   dataSlice,
   loadErrorSlice,
   productDataSlice,
@@ -23,5 +25,7 @@ export const store = configureStore({
     userData: userDataSlice,
     productsData: productsDataSlice,
     productData: productDataSlice,
+    cartData: cartDataSlice,
+    cartsData: cartsDataSlice,
   },
 });
