@@ -6,7 +6,7 @@ import {
   RouteInfo,
   UserPatchRequest,
 } from "../components";
-import { paramInputArray } from "../data";
+import { UserParamField } from "../data";
 
 const USER_ENDPOINT: string = process.env.REACT_APP_API_USERS_ENDPOINT!;
 
@@ -33,7 +33,7 @@ const UserSection = () => {
         endpoint={USER_ENDPOINT}
         title="user"
         subtitle="Get a user by sending a get request to the endpoint"
-        inputArray={paramInputArray}
+        inputArray={[UserParamField]}
         user={true}
       />
       <UserPatchRequest />
@@ -41,7 +41,7 @@ const UserSection = () => {
         endpoint={USER_ENDPOINT}
         title="user"
         subtitle="Delete a user by sending a delete request to the endpoint"
-        inputArray={paramInputArray}
+        inputArray={[UserParamField]}
         user={true}
       />
     </section>

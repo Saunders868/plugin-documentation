@@ -2,8 +2,9 @@ import React, { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addCartData } from "../slices/cartDataSlice";
 import { addCartsData } from "../slices/cartsDataSlice";
-import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
+import { addOrderData } from "../slices/orderDataSlice";
+import { addOrdersData } from "../slices/ordersDataSlice";
 import { addProductData } from "../slices/productDataSlice";
 import { addProductsData } from "../slices/productsDataSlice";
 import { addUserData } from "../slices/userDataSlice";
@@ -12,6 +13,7 @@ import {
   cartDataInterface,
   globalStateType,
   InputInterface,
+  orderDataInterface,
   productDataInterface,
   sessionType,
   userDataInterface,
@@ -31,6 +33,8 @@ interface componentProps {
   products?: boolean;
   cart?: boolean;
   carts?: boolean;
+  order?: boolean;
+  orders?: boolean;
 }
 
 const GetRequestCard: FC<componentProps> = ({
@@ -43,7 +47,9 @@ const GetRequestCard: FC<componentProps> = ({
   product,
   products,
   cart,
-  carts
+  carts,
+  order,
+  orders,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -68,11 +74,14 @@ const GetRequestCard: FC<componentProps> = ({
     (state) => state.productData
   );
   // cart states
-  const cartData: cartDataInterface = useAppSelector(
-    (state) => state.cartData
-  );
+  const cartData: cartDataInterface = useAppSelector((state) => state.cartData);
   const cartsData: cartDataInterface[] = useAppSelector(
     (state) => state.cartsData
+  );
+  // order states
+  const orderData: orderDataInterface = useAppSelector((state) => state.order);
+  const ordersData: orderDataInterface[] = useAppSelector(
+    (state) => state.orders
   );
 
   const [formData, setFormData] = useState<string>("");
@@ -85,13 +94,6 @@ const GetRequestCard: FC<componentProps> = ({
     e.preventDefault();
 
     dispatch(loading(true));
-
-    const dataAxios: any = await axiosCall(
-      "get",
-      tokens,
-      dynamicEndpoint,
-      null
-    );
 
     if (users) {
       const dataAxios: Promise<userDataInterface[]> = await axiosCall(
@@ -158,7 +160,26 @@ const GetRequestCard: FC<componentProps> = ({
       dispatch(addCartData(dataAxios));
     }
 
-    dispatch(addData(dataAxios));
+    if (orders) {
+      const dataAxios: Promise<orderDataInterface[]> = await axiosCall(
+        "get",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addOrdersData(dataAxios));
+    }
+    if (order) {
+      const dataAxios: Promise<orderDataInterface> = await axiosCall(
+        "get",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addOrderData(dataAxios));
+    }
 
     dispatch(loading(false));
   };
@@ -184,6 +205,12 @@ const GetRequestCard: FC<componentProps> = ({
   }
   if (carts) {
     dataToDisplay = JSON.stringify(cartsData);
+  }
+  if (order) {
+    dataToDisplay = JSON.stringify(orderData);
+  }
+  if (orders) {
+    dataToDisplay = JSON.stringify(ordersData);
   }
 
   if (load) {

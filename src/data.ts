@@ -1,6 +1,12 @@
 //  put the array of data for each route in this file to map through when ready
 import uuid from "react-uuid";
-import { Body, cartSchema, InputInterface, productSchema, sessionSchema } from "./types";
+import {
+  Body,
+  InputInterface,
+  orderSchema,
+  productSchema,
+  sessionSchema,
+} from "./types";
 // USER DATA
 export const createUserInputArray: InputInterface[] = [
   {
@@ -53,14 +59,14 @@ export const createUserInputArray: InputInterface[] = [
   },
 ];
 
-export const patchUserParamField: InputInterface = {
+export const UserParamField: InputInterface = {
   type: "text",
   placeholder: ":/id",
   label: "Param",
   id: "param",
   required: true,
   key: uuid(),
-}
+};
 
 export const patchUserInputArray: InputInterface[] = [
   {
@@ -150,7 +156,7 @@ export const sessionInputArray: InputInterface[] = [
 ];
 
 // PRODUCT DATA
-export const createProductInputArray: InputInterface[] = [
+export const ProductInputArray: InputInterface[] = [
   {
     type: "text",
     placeholder: "title",
@@ -183,48 +189,23 @@ export const initialProductState: productSchema = {
   price: 0,
 };
 
-export const updateProductParamField: InputInterface = {
+export const ProductParamField: InputInterface = {
   type: "text",
   placeholder: ":/productId",
   label: "Param",
   id: "param",
   required: true,
   key: uuid(),
-}
-
-export const updateProductInputArray: InputInterface[] = [
-  {
-    type: "text",
-    placeholder: "title",
-    label: "Title",
-    id: "title",
-    required: true,
-    key: uuid(),
-  },
-  {
-    type: "text",
-    placeholder: "description",
-    label: "Description",
-    id: "desc",
-    required: true,
-    key: uuid(),
-  },
-  {
-    type: "number",
-    placeholder: "price",
-    label: "Price",
-    id: "price",
-    required: true,
-    key: uuid(),
-  },
-];
+};
 
 // CART DATA
 export const initialCartState: Body = {
-  products: [{
-    product_id: "",
-    quantity: 0,
-  }],
+  products: [
+    {
+      product_id: "",
+      quantity: 0,
+    },
+  ],
 };
 
 export const createCartInputArray: InputInterface[] = [
@@ -243,24 +224,17 @@ export const createCartInputArray: InputInterface[] = [
     id: "quantity",
     required: true,
     key: uuid(),
-  }
-]
-
-export const initialPatchCartState: cartSchema = [
-  {
-    product_id: "",
-    quantity: 0,
   },
-]
+];
 
-export const updateCartParamsField: InputInterface = {
+export const CartParamsField: InputInterface = {
   type: "text",
-  placeholder: ":/productId",
+  placeholder: ":/cartId",
   label: "Param",
   id: "param",
   required: true,
   key: uuid(),
-}
+};
 
 export const updateCartInputArray: InputInterface[] = [
   {
@@ -278,5 +252,40 @@ export const updateCartInputArray: InputInterface[] = [
     id: "quantity",
     required: true,
     key: uuid(),
-  }
-]
+  },
+];
+
+// ORDER DATA
+export const initialOrderState: orderSchema = {
+  isCompleted: false,
+};
+
+export const createOrderInputArray: InputInterface[] = [
+  {
+    type: "checkbox",
+    placeholder: "isCompleted",
+    label: "Order Status",
+    id: "isCompleted",
+    required: true,
+    key: uuid(),
+  },
+];
+export const updateOrderInputArray: InputInterface[] = [
+  {
+    type: "checkbox",
+    placeholder: "isCompleted",
+    label: "Order Status",
+    id: "isCompleted",
+    required: true,
+    key: uuid(),
+  },
+];
+
+export const updateOrderParamField: InputInterface = {
+  type: "text",
+  placeholder: ":/orderId",
+  label: "Param",
+  id: "param",
+  required: true,
+  key: uuid(),
+};

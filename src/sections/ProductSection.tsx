@@ -7,11 +7,9 @@ import {
   RouteInfo,
 } from "../components";
 import {
-  createProductInputArray,
+  ProductInputArray,
   initialProductState,
-  paramInputArray,
-  updateProductInputArray,
-  updateProductParamField,
+  ProductParamField,
 } from "../data";
 
 const PRODUCT_ENDPOINT: string = process.env.REACT_APP_API_PRODUCTS_ENDPOINT!;
@@ -29,7 +27,7 @@ const ProductSection = () => {
         subtitle="Create a product by sending a post request and some data to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
         initialState={initialProductState}
-        inputArray={createProductInputArray}
+        inputArray={ProductInputArray}
         product={true}
       />
       <GetRequestCard
@@ -42,7 +40,7 @@ const ProductSection = () => {
         title="product"
         subtitle="Get a product by sending a get request to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
-        inputArray={paramInputArray}
+        inputArray={[ProductParamField]}
         product={true}
       />
       <PatchRequestCard
@@ -50,15 +48,15 @@ const ProductSection = () => {
         subtitle="Update a product by sending a patch request and data to the endpoint"
         endpoint={PRODUCT_ENDPOINT}
         initialState={initialProductState}
-        inputArray={updateProductInputArray}
-        paramField={updateProductParamField}
+        inputArray={ProductInputArray}
+        paramField={ProductParamField}
         product={true}
       />
       <DeleteRequestCard
         endpoint={PRODUCT_ENDPOINT}
         title="product"
         subtitle="Delete a product by sending a delete request to the endpoint"
-        inputArray={paramInputArray}
+        inputArray={[ProductParamField]}
         product={true}
       />
     </section>

@@ -2,7 +2,21 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        toast: {
+          'from': {
+              transform: 'translateY(100%)',
+          },
+          'to': {
+              transform: 'translateY(0)',
+          }
+        }
+      },
+      animation: {
+        'toast-animation': 'toast 0.3s',
+      },
+    },
   },
   plugins: [require("@tailwindcss/forms")],
 };

@@ -21,7 +21,7 @@
   .card-heading {
     @apply primary-text font-semibold uppercase mb-2;
   }
-  .card-subheading { 
+  .card-subheading {
     @apply secondary-text mb-4;
   }
   .card-desc {
@@ -32,5 +32,8 @@
   }
   .form {
     @apply grid gap-6 mb-6 lg:grid-cols-2;
+  }
+  .toast {
+    @apply fixed left-[16px] bottom-[16px] bg-neutral-900 min-h-[40px] max-w-[72px] rounded p-[12px] z-[100] flex justify-start items-start will-change-transform animate-toast-animation;
   }
 }

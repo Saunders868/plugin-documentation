@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { addCartData } from "../slices/cartDataSlice";
-import { addData } from "../slices/dataSlice";
 import { loading } from "../slices/loadErrorSlice";
+import { addOrderData } from "../slices/orderDataSlice";
 import { addProductData } from "../slices/productDataSlice";
 import { loggedIn } from "../slices/sessionSlice";
 import {
   Body,
   cartDataInterface,
   InputInterface,
+  orderDataInterface,
   orderSchema,
   productDataInterface,
   productSchema,
@@ -31,8 +32,8 @@ type componentProps = {
   login?: boolean;
   product?: boolean;
   cart?: boolean;
+  order?: boolean;
 };
-
 
 const Card: FC<componentProps> = ({
   initialState,
@@ -43,10 +44,10 @@ const Card: FC<componentProps> = ({
   login,
   product,
   cart,
+  order
 }: componentProps) => {
   const dispatch = useAppDispatch();
 
-  const data: any = useAppSelector((state) => state.data);
   const load: boolean = useAppSelector((state) => state.loadError.loading);
   const tokens: sessionType = useAppSelector((state) => state.session);
   // product
@@ -55,13 +56,16 @@ const Card: FC<componentProps> = ({
   );
   // cart
   const cartData: cartDataInterface = useAppSelector((state) => state.cartData);
+  // order
+  const orderData: orderDataInterface = useAppSelector((state) => state.order);
 
   const [formData, setFormData] = useState<
     sessionSchema | productSchema | orderSchema
   >(initialState);
+  
 
   const [cartState, setCartState] = useState<Body>(initialState);
-  console.log(cartState);
+  
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
@@ -69,10 +73,6 @@ const Card: FC<componentProps> = ({
     e.preventDefault();
 
     dispatch(loading(true));
-
-    // fallback
-    const dataAxios: any = await axiosCall("post", tokens, endpoint, formData);
-    dispatch(addData(dataAxios));
 
     if (login) {
       const dataAxios: Promise<sessionType> = await axiosCall(
@@ -104,13 +104,20 @@ const Card: FC<componentProps> = ({
       dispatch(addCartData(dataAxios));
     }
 
+    if (order) {
+      const dataAxios: Promise<orderDataInterface> = await axiosCall(
+        "post",
+        tokens,
+        endpoint,
+        formData
+      );
+      dispatch(addOrderData(dataAxios));
+    }
+
     dispatch(loading(false));
   };
 
   let dataToDisplay;
-
-  // fallback
-  dataToDisplay = JSON.stringify(data);
 
   if (login) {
     dataToDisplay = JSON.stringify(tokens);
@@ -120,6 +127,9 @@ const Card: FC<componentProps> = ({
   }
   if (cart) {
     dataToDisplay = JSON.stringify(cartData);
+  }
+  if (order) {
+    dataToDisplay = JSON.stringify(orderData);
   }
 
   // use load state to render a spinner instead of the card | Dont need error state

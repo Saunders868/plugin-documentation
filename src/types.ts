@@ -1,5 +1,3 @@
-import { Slice } from "@reduxjs/toolkit";
-
 // REDUX TYPES
 export interface sessionType {
   accessToken: string;
@@ -81,13 +79,6 @@ export interface Body {
   products: cartItemInterface[];
 }
 
-export type cartSchema = [
-  {
-    product_id: string;
-    quantity: number;
-  }
-];
-
 // ORDER TYPES
 export type orderSchema = {
   isCompleted: boolean;
@@ -157,6 +148,17 @@ export interface cartDataInterface {
   active: true;
   id: string;
   modifiedOn: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface orderDataInterface {
+  _id: string;
+  user: string;
+  cart: string;
+  isCompleted: boolean;
+  id: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

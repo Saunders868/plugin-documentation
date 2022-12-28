@@ -8,3 +8,5 @@ export { default as productDataSlice } from "./productDataSlice";
 export { default as productsDataSlice } from "./productsDataSlice";
 export { default as cartDataSlice } from "./cartDataSlice";
 export { default as cartsDataSlice } from "./cartsDataSlice";
+export { default as ordersDataSlice } from "./ordersDataSlice";
+export { default as orderDataSlice } from "./orderDataSlice";

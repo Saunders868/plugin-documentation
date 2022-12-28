@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FC } from "react";
-import { patchUserInputArray, patchUserParamField } from "../../data";
+import { patchUserInputArray, UserParamField } from "../../data";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addData } from "../../slices/dataSlice";
 import { loading } from "../../slices/loadErrorSlice";
@@ -79,11 +79,11 @@ const Card: FC = () => {
       </h3>
       <form className="form" onSubmit={(e) => handleSubmit(e)}>
         <GetRequestInput
-          required={patchUserParamField.required}
-          label={patchUserParamField.label}
-          placeholder={patchUserParamField.placeholder}
-          id={patchUserParamField.id}
-          type={patchUserParamField.type}
+          required={UserParamField.required}
+          label={UserParamField.label}
+          placeholder={UserParamField.placeholder}
+          id={UserParamField.id}
+          type={UserParamField.type}
           setFormData={setParam}
         />
         {patchUserInputArray.map((input) => (

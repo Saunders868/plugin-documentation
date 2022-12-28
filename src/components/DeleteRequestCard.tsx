@@ -1,10 +1,11 @@
 import React, { FC, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { addData } from "../slices/dataSlice";
+import { addCartData } from "../slices/cartDataSlice";
 import { loading } from "../slices/loadErrorSlice";
+import { addOrderData } from "../slices/orderDataSlice";
 import { addProductData } from "../slices/productDataSlice";
 import { addUserData } from "../slices/userDataSlice";
-import { globalStateType, InputInterface, productDataInterface, sessionType, userDataInterface } from "../types";
+import { cartDataInterface, globalStateType, InputInterface, orderDataInterface, productDataInterface, sessionType, userDataInterface } from "../types";
 import { axiosCall } from "../utils/Axios";
 import GetRequestInput from "./GetRequestInput";
 import Spinner from "./Spinner";
@@ -16,6 +17,8 @@ interface componentProps {
   inputArray?: InputInterface[];
   user?: boolean;
   product?: boolean;
+  cart?: boolean;
+  order?: boolean;
 }
 
 const GetRequestCard: FC<componentProps> = ({
@@ -24,7 +27,9 @@ const GetRequestCard: FC<componentProps> = ({
   subtitle,
   inputArray,
   user,
-  product
+  product,
+  cart,
+  order
 }) => {
   const dispatch = useAppDispatch();
 
@@ -42,6 +47,9 @@ const GetRequestCard: FC<componentProps> = ({
     (state) => state.productData
   );
 
+  const cartData: cartDataInterface = useAppSelector((state) => state.cartData);
+
+  const orderData: orderDataInterface = useAppSelector((state) => state.order);
 
   // this state would control the params being passed in to the request
   const [formData, setFormData] = useState<string>('');
@@ -52,13 +60,6 @@ const GetRequestCard: FC<componentProps> = ({
     e.preventDefault();
 
     dispatch(loading(true));
-
-    const dataAxios: Promise<any> = await axiosCall(
-      "delete",
-      tokens,
-      dynamicEndpoint,
-      null
-    )
 
     if (user) {
       const dataAxios: Promise<userDataInterface> = await axiosCall(
@@ -82,8 +83,27 @@ const GetRequestCard: FC<componentProps> = ({
       dispatch(addProductData(dataAxios));
     }
 
-    // put dataAxios into global state
-    dispatch(addData(dataAxios));
+    if (cart) {
+      const dataAxios: Promise<cartDataInterface> = await axiosCall(
+        "delete",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addCartData(dataAxios));
+    }
+
+    if (order) {
+      const dataAxios: Promise<orderDataInterface> = await axiosCall(
+        "delete",
+        tokens,
+        dynamicEndpoint,
+        null
+      );
+
+      dispatch(addOrderData(dataAxios));
+    }
 
     dispatch(loading(false));
   };
@@ -97,6 +117,14 @@ const GetRequestCard: FC<componentProps> = ({
 
   if (product) {
     dataToDisplay = JSON.stringify(productData);
+  }
+
+  if (cart) {
+    dataToDisplay = JSON.stringify(cartData);
+  }
+
+  if (order) {
+    dataToDisplay = JSON.stringify(orderData);
   }
 
 

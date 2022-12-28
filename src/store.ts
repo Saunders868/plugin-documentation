@@ -4,6 +4,8 @@ import {
   cartsDataSlice,
   dataSlice,
   loadErrorSlice,
+  orderDataSlice,
+  ordersDataSlice,
   productDataSlice,
   productsDataSlice,
   sessionSlice,
@@ -27,5 +29,7 @@ export const store = configureStore({
     productData: productDataSlice,
     cartData: cartDataSlice,
     cartsData: cartsDataSlice,
+    order: orderDataSlice,
+    orders: ordersDataSlice,
   },
 });

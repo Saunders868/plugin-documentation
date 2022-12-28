@@ -6,7 +6,9 @@ type componentProps = {
   label: string;
   placeholder: string;
   id: string;
-  setFormData: Dispatch<SetStateAction<formType | sessionSchema | productSchema | orderSchema>>;
+  setFormData: Dispatch<
+    SetStateAction<formType | sessionSchema | productSchema | orderSchema>
+  >;
   formData: formType | sessionSchema | productSchema | orderSchema;
   type: string;
 };
@@ -24,10 +26,14 @@ const Input: FC<componentProps> = ({
 
   const onChangeHandler = (e: any) => {
     setFormData({ ...formData, [stateID]: e.target.value });
-    
+
     if (type === "number") {
-      const number = parseFloat(e.target.value)
-      setFormData({ ...formData, [stateID]:number}) 
+      const number = parseFloat(e.target.value);
+      setFormData({ ...formData, [stateID]: number });
+    }
+
+    if (type === "checkbox") {
+      setFormData({ ...formData, isCompleted: e.target.checked });
     }
   };
 
