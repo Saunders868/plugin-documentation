@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_GENERAL_URI!,
-  timeout: 1000,
+  timeout: 5000,
 });
 
 export async function axiosCall(
