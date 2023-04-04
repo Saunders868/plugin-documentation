@@ -13,7 +13,7 @@ const APIdescription: FC = () => {
         <br />
         <span>
           <a
-            href="https://github.com/Saunders868/deliveryAPI"
+            href="https://github.com/Saunders868"
             target={"_blank"}
             rel="noreferrer"
             className="btn mr-4"
